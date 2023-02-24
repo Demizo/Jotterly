@@ -1,0 +1,51 @@
+<script lang="ts">
+  import { invoke } from "@tauri-apps/api/tauri";
+  import JotView from "$lib/JotView.svelte";
+  
+  let query = "";
+  let jots = [{id: Number, text: String, img_path: String, time_create: String, time_modified: String }];
+  let tags_list = [{id: Number, title: String, color: String, priority: Number, time_create: String, time_modified: String}];
+  async function search_jots() {
+    if (query.trim().length > 2 || query.trim().length == 0 ) {
+      jots = await invoke("search_jots", {query: query});
+      console.log(jots);
+    }
+  }
+</script>
+
+
+
+<div class="header">
+  <h1>Jotterly</h1>
+  <div class="row">
+    <input id="greet-input" inputmode="search" on:keyup={search_jots} placeholder="Search or Jot..." bind:value={query} />
+    <button> Jot </button>
+  </div>
+</div>
+
+{#await search_jots()}
+  <!-- Show a loading indicator or message until the data is ready -->
+  <p>Loading...</p>
+{:then}
+  <!-- The data is ready, so render it -->
+  {#each jots as jot (jot.id)}
+    <JotView jot={jot}/> 
+  {:else}
+    No Jots
+  {/each}
+{:catch error}
+  <!-- Handle any errors that occur while fetching or processing the data -->
+  <p>Error: {error.message}</p>
+{/await}
+
+<style>
+  .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+</style>

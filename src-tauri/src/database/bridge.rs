@@ -1,0 +1,73 @@
+use fuzzy_matcher::{skim::SkimMatcherV2, FuzzyMatcher};
+
+use super::*;
+
+pub struct Bridge {
+    conn: SqliteConnection,
+}
+impl Bridge {
+    pub async fn new() -> Bridge {
+        Bridge{conn: establish_connection().await}
+    }
+    pub async fn get_all_tags_for_jot(&mut self, id: i64) -> Vec<models::Tag> {
+        get_tags_for_jot(&mut self.conn, id).await.unwrap()
+    }
+    pub async fn get_all_tags(&mut self) -> Vec<models::Tag> {
+        get_all_tags(&mut self.conn).await.unwrap()
+    }
+    pub async fn add_tag_to_jot(&mut self, tag_id: i64, jot_id: i64){
+        insert_jot_tag(&mut self.conn, jot_id, tag_id).await.unwrap();
+    }
+    pub async fn add_new_tag_to_jot(&mut self, title: &str, jot_id: i64) -> models::Tag{
+        let tag_id = insert_tag(&mut self.conn, title, Option::None).await.unwrap().last_insert_rowid();
+        insert_jot_tag(&mut self.conn, jot_id, tag_id).await.unwrap();
+        fetch_tag(&mut self.conn, title).await.unwrap().unwrap()
+    }
+    pub async fn remove_tag_from_jot(&mut self, tag_id: i64, jot_id: i64){
+        delete_jot_tag(&mut self.conn, jot_id, tag_id).await.unwrap();
+        if fetch_jot_tag_for_tag(&mut self.conn, tag_id).await.unwrap().is_none() {
+            delete_tag(&mut self.conn, tag_id).await.unwrap();
+        }
+    }
+    
+    /* Searching */
+    pub async fn search_jots(&mut self, query: &str) -> Result<Vec<models::Jot>, sqlx::Error> {
+        //TODO: maybe sort by matching ids not the full text
+        let jots = get_all_jots(&mut self.conn).await?;
+        //fuzzy search tags
+        let texts = jots.iter().map(|tag| tag.text.clone()).collect();
+        let matching_jot_texts: Vec<String> = fuzzy_search(query, texts).iter()
+            .map(|t| t.1.clone()).collect();
+        //filter out already added tags
+        let mut jots: Vec<models::Jot> = jots.iter().filter(|t| matching_jot_texts.contains(&t.text)).cloned().collect();
+        jots.sort_by(|a, b| matching_jot_texts.iter()
+            .position(|n| n == &a.text).cmp(&matching_jot_texts.iter().position(|n| n == &b.text)));
+        Ok(jots)
+    }
+    pub async fn search_tags(&mut self, query: &str, tag_ids: Vec<i64>) -> Result<Vec<models::Tag>, sqlx::Error>{
+        let tags = get_all_tags(&mut self.conn).await?;
+        //fuzzy search tags
+        let titles = tags.iter().map(|tag| tag.title.clone()).collect();
+        let matching_tag_titles: Vec<String> = fuzzy_search(query, titles).iter().map(|t| t.1.clone()).collect();
+        //filter out already added tags
+        let mut tags: Vec<models::Tag> = tags.iter().filter(|t| !tag_ids.contains(&t.id) && matching_tag_titles.contains(&t.title)).cloned().collect();
+        tags.sort_by(|a, b| matching_tag_titles.iter().position(|n| n == &a.title).cmp(&matching_tag_titles.iter().position(|n| n == &b.title)));
+        Ok(tags)
+    }
+}
+
+fn fuzzy_search(query: &str, list: Vec<String>) -> Vec<(i64, String)> {
+    let matcher = SkimMatcherV2::default();
+    let mut results = vec![];
+        
+    for item in list {
+        let score = matcher.fuzzy_match(item.as_str(), query);
+        if score.is_some() {
+            results.push((score.unwrap(), item));
+        }
+    }
+    results.sort_by(|a, b| b.0.cmp(&a.0));
+    results.iter().map(|(score, value)| {
+        (score.to_owned(), value.clone().to_owned().to_string())
+    }).collect()
+}
