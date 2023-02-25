@@ -6,6 +6,7 @@
     let query = "";
     let pending = false;
     function closePopup() {
+      query = "";
       visible = false;
     }
     let tags_list = [{id: Number, title: String, color: String, priority: Number, time_create: String, time_modified: String}];
