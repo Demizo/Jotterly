@@ -9,6 +9,12 @@ impl Bridge {
     pub async fn new() -> Bridge {
         Bridge{conn: establish_connection().await}
     }
+    /* Jots */
+    pub async fn update_jot_text(&mut self, id: i64, text: &str, img_path: Option<String>) {
+        update_jot(&mut self.conn, id, text, img_path, chrono::Local::now().naive_local()).await.unwrap();
+    }
+    
+    /* Tags */
     pub async fn get_all_tags_for_jot(&mut self, id: i64) -> Vec<models::Tag> {
         get_tags_for_jot(&mut self.conn, id).await.unwrap()
     }

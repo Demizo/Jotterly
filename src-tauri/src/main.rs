@@ -42,10 +42,15 @@ async fn remove_tag_from_jot(tag_id: i64, jot_id: i64){
     let mut bridge = Bridge::new().await;
     bridge.remove_tag_from_jot(tag_id, jot_id).await;
 }
+#[tauri::command]
+async fn update_jot_text(id: i64, text: String, img_path: Option<String>) {
+    let mut bridge = Bridge::new().await;
+    bridge.update_jot_text(id, text.as_str(), img_path).await;
+}
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![search_jots,get_all_tags_for_jot,get_all_tags,add_tag_to_jot,add_new_tag_to_jot,remove_tag_from_jot,search_tags])
+        .invoke_handler(tauri::generate_handler![search_jots,get_all_tags_for_jot,get_all_tags,add_tag_to_jot,add_new_tag_to_jot,remove_tag_from_jot,search_tags,update_jot_text])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

@@ -71,6 +71,7 @@
           {#each tags_list as tag, i}
             <button on:click={() => {
                 add_tag_to_jot(tag.id)
+                query = "";
                 // force reload of tags list
                 tags.push(tag);
                 tags = [...tags];

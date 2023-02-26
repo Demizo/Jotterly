@@ -18,12 +18,18 @@
   
   let isEditing = false;
   let text = jot.text;
+  let temptext = text;
   function toggleEditing() {
+    temptext = text;
     isEditing = !isEditing;
   }
   function saveChanges() {
+    text = temptext;
     isEditing = false;
-    // save textContent to the database or perform any other action
+    save_jot_text();
+  }
+  async function save_jot_text() {
+    await invoke("update_jot_text", {id: jot.id, text: text, img_path: jot.img_path});
   }
   function calcTextAreaHeight(event) {
     const textarea = event.target;
@@ -42,23 +48,30 @@
     <div class="action-buttons">
       <div class="date-label">{date}</div>
       <div>
+        {#if !isEditing}
         <button class="action-button">c</button>
         <button class="action-button" on:click={toggleEditing}>e</button>
+        {:else}
+        <button class="action-button">d</button>
+        <button class="action-button" on:click={saveChanges}>s</button>
+        <button class="action-button" on:click={toggleEditing}>x</button>
+        {/if}
       </div>
 
     </div>
     {#if !isEditing}
       <div class="text-area">{@html marked(text)}</div>
     {:else}
-      <textarea autofocus on:select={calcTextAreaHeight} on:input={calcTextAreaHeight} bind:value={text}></textarea>
+      <textarea autofocus on:select={calcTextAreaHeight} on:input={calcTextAreaHeight} bind:value={temptext}></textarea>
     {/if}
     {#each tags as tag, i}
       <div class="tag">{tag.title}</div>
     {/each}
     <button class="add-tag" on:click={displayTagPopup}>+</button>
-    <EditTagsPopup jotId={jot.id} bind:visible={showTagPopup} bind:tags={tags} />
   </div>
 </div>
+<EditTagsPopup jotId={jot.id} bind:visible={showTagPopup} bind:tags={tags} />
+
 <style>
   .add-tag {
     display: inline-block;

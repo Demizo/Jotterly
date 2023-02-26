@@ -59,7 +59,7 @@ pub async fn insert_jot_tag(conn: &mut SqliteConnection,
 pub async fn update_jot(conn: &mut SqliteConnection,
     id: i64,
     text: &str,
-    img_path: Option<&str>,
+    img_path: Option<String>,
     time_modified: chrono::NaiveDateTime
     ) -> Result<SqliteQueryResult, sqlx::Error>{
     let result = sqlx::query!(
