@@ -51,7 +51,7 @@
         {:else}
           <p>No tags...</p>
         {/each}
-        <input style="width: 27em; margin-bottom: 1em;" inputmode="search" on:keyup={search_tags} placeholder="Search..." bind:value={query}/>
+        <input autofocus style="width: 27em; margin-bottom: 1em;" inputmode="search" on:keyup={search_tags} placeholder="Search..." bind:value={query}/>
         {#await search_tags()}
           <p>Loading...</p>
         {:then}
