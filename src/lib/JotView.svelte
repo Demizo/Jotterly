@@ -19,11 +19,22 @@
   let isEditing = false;
   let text = jot.text;
   let temptext = text;
+  let actionButtons;
   function toggleEditing() {
     temptext = text;
-    isEditing = !isEditing;
+    if (isEditing) {
+      isEditing = false;
+      zIndex(0);
+    } else {
+      isEditing = true;
+      zIndex(100);
+    }
+  }
+  function zIndex(index: Number){
+    actionButtons.style.zIndex = index;
   }
   function saveChanges() {
+    zIndex(0);
     text = temptext;
     isEditing = false;
     save_jot_text();
@@ -47,22 +58,22 @@
   <div class="box">
     <div class="action-buttons">
       <div class="date-label">{date}</div>
-      <div>
+      <div bind:this={actionButtons}>
         {#if !isEditing}
         <button class="action-button">c</button>
         <button class="action-button" on:click={toggleEditing}>e</button>
         {:else}
         <button class="action-button">d</button>
-        <button class="action-button" on:click={saveChanges}>s</button>
+        <button disabled={temptext.toString().trim().length <= 0 || temptext === text} class="action-button" on:click={saveChanges}>s</button>
         <button class="action-button" on:click={toggleEditing}>x</button>
         {/if}
       </div>
-
+    
     </div>
     {#if !isEditing}
       <div class="text-area">{@html marked(text)}</div>
     {:else}
-      <textarea autofocus on:select={calcTextAreaHeight} on:input={calcTextAreaHeight} bind:value={temptext}></textarea>
+      <textarea style="z-index: 999; position: relative;" autofocus on:select={calcTextAreaHeight} on:input={calcTextAreaHeight} bind:value={temptext}></textarea>
     {/if}
     {#each tags as tag, i}
       <div class="tag">{tag.title}</div>
@@ -71,7 +82,9 @@
   </div>
 </div>
 <EditTagsPopup jotId={jot.id} bind:visible={showTagPopup} bind:tags={tags} />
-
+{#if isEditing}
+<div class="overlay"></div>
+{/if}
 <style>
   .add-tag {
     display: inline-block;
@@ -131,5 +144,15 @@
     padding: 10px;
     resize: none;
     overflow: hidden;
+  }
+
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
   }
 </style>
