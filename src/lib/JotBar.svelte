@@ -19,7 +19,6 @@
   <h1>Jotterly</h1>
   <div class="row">
     <input autofocus inputmode="search" on:keyup={search_jots} placeholder="Search or Jot..." bind:value={query} />
-    <button> Jot </button>
   </div>
 </div>
 

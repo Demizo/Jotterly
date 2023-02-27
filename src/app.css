@@ -113,7 +113,9 @@ input:focus {
 button:hover {
   border-color: #0c3da7;
 }
-
+button:focus {
+  border-color: #0c3da7;
+}
 input,
 button {
   outline: none;

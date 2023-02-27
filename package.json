@@ -13,7 +13,8 @@
   },
   "dependencies": {
     "@tauri-apps/api": "^1.2.0",
-    "marked": "^4.2.12"
+    "marked": "^4.2.12",
+    "svelte-focus-trap": "^1.2.0"
   },
   "devDependencies": {
     "@sveltejs/adapter-static": "^1.0.6",

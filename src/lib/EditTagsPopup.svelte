@@ -1,5 +1,7 @@
 <script lang="ts">
     import { invoke } from "@tauri-apps/api/tauri";
+    import { focusTrap } from 'svelte-focus-trap';
+
     export let visible = false;
     export let jotId: Number;
     export let tags = [{id: Number, title: String, color: String, priority: Number, time_create: String, time_modified: String}];
@@ -37,7 +39,7 @@
   
   {#if visible}
     <div class="popup">
-      <div class="popup-content">
+      <div class="popup-content" use:focusTrap>
         <div class="left-row">
           <p class="thin-label">Remove Tags...</p>
         </div>

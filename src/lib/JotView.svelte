@@ -2,6 +2,7 @@
   import { invoke } from "@tauri-apps/api/tauri";
   import { marked } from 'marked';
   import EditTagsPopup from './EditTagsPopup.svelte';
+  import { focusTrap } from 'svelte-focus-trap';
 
   let showTagPopup = false;
   
@@ -52,20 +53,20 @@
   }
 </script>
 
-
-
 <div class="row">
   <div class="box">
     <div class="action-buttons">
       <div class="date-label">{date}</div>
       <div bind:this={actionButtons}>
         {#if !isEditing}
-        <button class="action-button">c</button>
+        <!-- <button class="action-button">c</button> -->
         <button class="action-button" on:click={toggleEditing}>e</button>
         {:else}
-        <button class="action-button">d</button>
-        <button disabled={temptext.toString().trim().length <= 0 || temptext === text} class="action-button" on:click={saveChanges}>s</button>
-        <button class="action-button" on:click={toggleEditing}>x</button>
+        <div use:focusTrap>
+          <button class="action-button">d</button>
+          <button disabled={temptext.toString().trim().length <= 0 || temptext === text} class="action-button" on:click={saveChanges}>s</button>
+          <button class="action-button" on:click={toggleEditing}>x</button>
+        </div>
         {/if}
       </div>
     
@@ -78,15 +79,20 @@
     {#each tags as tag, i}
       <div class="tag">{tag.title}</div>
     {/each}
-    <button class="add-tag" on:click={displayTagPopup}>+</button>
+    <!-- TODO Remove inability focus add tags-->
+    <button tabindex="-1" class="add-tag" on:click={displayTagPopup}>+</button>
   </div>
 </div>
 <EditTagsPopup jotId={jot.id} bind:visible={showTagPopup} bind:tags={tags} />
 {#if isEditing}
-<div class="overlay"></div>
+<div class="overlay" tabindex="1"></div>
 {/if}
 <style>
-  .add-tag {
+  button:disabled {
+    background-color: #383838;
+    color: #75747446;
+  }
+  .add-tag {    
     display: inline-block;
     padding: 0px 6px;
     border-radius: 50px;
@@ -99,18 +105,18 @@
     cursor: pointer;
   }
   .action-button {
-      top: 0em;
-      right: 0em;
-      display: inline-block;
-      padding: 0px 6px;
-      border-radius: 50px;
-      background-color: #383838;
-      color: #757474;
-      font-size: 20px;
-      font-weight: bold;
-      text-align: center;
-      cursor: pointer;
-      align-content: end;
+    top: 0em;
+    right: 0em;
+    display: inline-block;
+    padding: 0px 6px;
+    border-radius: 50px;
+    background-color: #383838;
+    color: #757474;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    align-content: end;
   }
   .text-area{
     /* background-color: #7574741a; */
