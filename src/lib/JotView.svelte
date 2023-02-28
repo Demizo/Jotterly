@@ -5,7 +5,7 @@
   import { focusTrap } from 'svelte-focus-trap';
 
   let showTagPopup = false;
-  
+  export let search_jots;
   export let jot = {id: Number, text: String, img_path: String, time_create: String, time_modified: String };
 
   let tags = [{id: Number, title: String, color: String, priority: Number, time_create: String, time_modified: String}];
@@ -43,6 +43,10 @@
   async function save_jot_text() {
     await invoke("update_jot_text", {id: jot.id, text: text, img_path: jot.img_path});
   }
+  async function delete_jot() {
+    await invoke("delete_jot", {id: jot.id});
+    search_jots();
+  }
   function calcTextAreaHeight(event) {
     const textarea = event.target;
     textarea.style.height = "auto";
@@ -62,8 +66,8 @@
         <!-- <button class="action-button">c</button> -->
         <button class="action-button" on:click={toggleEditing}>e</button>
         {:else}
-        <div use:focusTrap>
-          <button class="action-button">d</button>
+        <div use:focusTrap>          
+          <button class="action-button" on:click={delete_jot}>d</button>
           <button disabled={temptext.toString().trim().length <= 0 || temptext === text} class="action-button" on:click={saveChanges}>s</button>
           <button class="action-button" on:click={toggleEditing}>x</button>
         </div>
@@ -74,13 +78,14 @@
     {#if !isEditing}
       <div class="text-area">{@html marked(text)}</div>
     {:else}
-      <textarea style="z-index: 999; position: relative;" autofocus on:select={calcTextAreaHeight} on:input={calcTextAreaHeight} bind:value={temptext}></textarea>
+    <!-- TODO: Focus trap will leave element if this and add-tag dont have a tabIndex of -1-->
+    <textarea tabIndex="-1" autofocus style="z-index: 999; position: relative;"  on:select={calcTextAreaHeight} on:input={calcTextAreaHeight} bind:value={temptext}></textarea>
     {/if}
     {#each tags as tag, i}
       <div class="tag">{tag.title}</div>
     {/each}
-    <!-- TODO Remove inability focus add tags-->
-    <button tabindex="-1" class="add-tag" on:click={displayTagPopup}>+</button>
+    <!-- TODO: Remove inability focus add tags?-->
+    <button tabIndex="-1" class="add-tag" on:click={displayTagPopup}>+</button>
   </div>
 </div>
 <EditTagsPopup jotId={jot.id} bind:visible={showTagPopup} bind:tags={tags} />

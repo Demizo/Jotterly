@@ -47,10 +47,20 @@ async fn update_jot_text(id: i64, text: String, img_path: Option<String>) {
     let mut bridge = Bridge::new().await;
     bridge.update_jot_text(id, text.as_str(), img_path).await;
 }
+#[tauri::command]
+async fn create_jot(text: String, img_path: Option<String>) -> i64 {
+    let mut bridge = Bridge::new().await;
+    bridge.create_jot(text.as_str(), img_path).await.unwrap()
+}
+#[tauri::command]
+async fn delete_jot(id: i64) {
+    let mut bridge = Bridge::new().await;
+    bridge.delete_jot(id).await;
+}
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![search_jots,get_all_tags_for_jot,get_all_tags,add_tag_to_jot,add_new_tag_to_jot,remove_tag_from_jot,search_tags,update_jot_text])
+        .invoke_handler(tauri::generate_handler![search_jots,get_all_tags_for_jot,get_all_tags,add_tag_to_jot,add_new_tag_to_jot,remove_tag_from_jot,search_tags,update_jot_text,create_jot,delete_jot])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

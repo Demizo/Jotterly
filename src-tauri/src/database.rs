@@ -14,7 +14,7 @@ pub async fn establish_connection() -> SqliteConnection {
 /* Insert Entries */
 pub async fn insert_jot(conn: &mut SqliteConnection,
     text: &str,
-    img_path: Option<&str>
+    img_path: Option<String>
     ) -> Result<SqliteQueryResult, sqlx::Error>{
     let result = sqlx::query!(
         "
@@ -193,6 +193,15 @@ pub async fn fetch_tag(conn: &mut SqliteConnection, title: &str) -> Result<Optio
         SELECT * FROM tags WHERE title = ?
         ",
         title
+    ).fetch_optional(conn).await;
+    tag
+}
+pub async fn fetch_jot(conn: &mut SqliteConnection, id: i64) -> Result<Option<models::Jot>, sqlx::Error> {
+    let tag = sqlx::query_as!(models::Jot,
+        "
+        SELECT * FROM jots WHERE id = ?
+        ",
+        id
     ).fetch_optional(conn).await;
     tag
 }

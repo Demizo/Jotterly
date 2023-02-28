@@ -1,4 +1,5 @@
 use fuzzy_matcher::{skim::SkimMatcherV2, FuzzyMatcher};
+use sqlx::database;
 
 use super::*;
 
@@ -13,7 +14,20 @@ impl Bridge {
     pub async fn update_jot_text(&mut self, id: i64, text: &str, img_path: Option<String>) {
         update_jot(&mut self.conn, id, text, img_path, chrono::Local::now().naive_local()).await.unwrap();
     }
-    
+    pub async fn create_jot(&mut self, text: &str, img_path: Option<String>) -> Result<i64, sqlx::Error>{
+        let result = insert_jot(&mut self.conn, text, img_path).await?;
+        Ok(result.last_insert_rowid())
+    }
+    pub async fn fetch_new_jot(&mut self, id: i64) -> models::Jot {
+        fetch_jot(&mut self.conn, id).await.unwrap().unwrap()
+    }
+    pub async fn delete_jot(&mut self, id: i64) {
+        let tags = self.get_all_tags_for_jot( id).await;
+        for tag in tags {
+            self.remove_tag_from_jot(tag.id, id).await;
+        }
+        delete_jot(&mut self.conn, id).await.unwrap();
+    }
     /* Tags */
     pub async fn get_all_tags_for_jot(&mut self, id: i64) -> Vec<models::Tag> {
         get_tags_for_jot(&mut self.conn, id).await.unwrap()
@@ -44,8 +58,14 @@ impl Bridge {
         let texts = jots.iter().map(|tag| tag.text.clone()).collect();
         let matching_jot_texts: Vec<String> = fuzzy_search(query, texts).iter()
             .map(|t| t.1.clone()).collect();
-        //filter out already added tags
-        let mut jots: Vec<models::Jot> = jots.iter().filter(|t| matching_jot_texts.contains(&t.text)).cloned().collect();
+        //filter jots
+        // let mut filtered_jots = jots.clone();
+        // for jot in jots {
+            
+        // }
+        let mut jots: Vec<models::Jot> = jots.iter()
+            .filter(|t| {matching_jot_texts.contains(&t.text)})
+            .cloned().collect();
         jots.sort_by(|a, b| matching_jot_texts.iter()
             .position(|n| n == &a.text).cmp(&matching_jot_texts.iter().position(|n| n == &b.text)));
         Ok(jots)

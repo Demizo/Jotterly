@@ -11,6 +11,11 @@
       console.log(jots);
     }
   }
+  async function create_jot() {
+    let jotId = await invoke("create_jot", {text: query, img_path: undefined});
+    search_jots();
+    console.log(jotId);
+  }
 </script>
 
 
@@ -27,8 +32,11 @@
   <p>Loading...</p>
 {:then}
   <!-- The data is ready, so render it -->
+  {#if query.trim().length > 2}
+    <button on:click={create_jot}>New Jot + "{query}"</button>
+  {/if}
   {#each jots as jot (jot.id)}
-    <JotView jot={jot}/> 
+    <JotView search_jots={search_jots} jot={jot}/> 
   {:else}
     No Jots
   {/each}

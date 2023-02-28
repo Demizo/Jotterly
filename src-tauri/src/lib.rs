@@ -13,7 +13,7 @@ pub struct Tag {
     pub color: Option<String>,
     pub priority: i64
 }
-pub async fn create_jot(conn: &mut SqliteConnection, text: &str, img_path: Option<&str>, tags: Option<Vec<i64>>) -> Result<SqliteQueryResult, sqlx::Error>{
+pub async fn create_jot(conn: &mut SqliteConnection, text: &str, img_path: Option<String>, tags: Option<Vec<i64>>) -> Result<SqliteQueryResult, sqlx::Error>{
     let jot_result = database::insert_jot(conn, text, img_path).await?;
     //if no tags skip
     if tags.is_none() { 
