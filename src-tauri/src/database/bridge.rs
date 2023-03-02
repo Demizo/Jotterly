@@ -1,8 +1,8 @@
 use std::vec;
 
-use fuzzy_matcher::{skim::SkimMatcherV2, FuzzyMatcher};
+use fuzzy_matcher::{skim::{SkimMatcherV2, SkimScoreConfig}, FuzzyMatcher, clangd::{self, ClangdMatcher}};
 use sqlx::database;
-
+use sublime_fuzzy::{ContinuousMatches, best_match};
 use super::*;
 
 pub struct Bridge {
@@ -70,6 +70,9 @@ impl Bridge {
     pub async fn smart_search_jots(&mut self, query: &str) -> Result<Vec<models::Jot>, sqlx::Error> {
         let jots = get_all_jots(&mut self.conn).await?;
         let matcher = SkimMatcherV2::default();
+        // matcher = matcher.score_config(SkimScoreConfig{gap_start: -6,
+        //     gap_extension: -3,
+        //     ..Default::default()});
         
         let tags: Vec<String> = get_all_tags(&mut self.conn).await.unwrap().iter().map(|t| t.title.to_owned()).collect();
         let filtered_tags = fuzzy_search(query, tags);
@@ -99,6 +102,47 @@ impl Bridge {
         filtered_jots.sort_by(|a, b| a.0.cmp(&b.0));
         Ok(filtered_jots.iter().map(|j| j.1.to_owned()).collect())
     }
+    
+    pub async fn sublime_search_jots(&mut self, query: &str) -> Result<Vec<models::Jot>, sqlx::Error> {
+        let jots = get_all_jots(&mut self.conn).await?;
+        //let matcher = SkimMatcherV2::default();
+        
+        let tags: Vec<String> = get_all_tags(&mut self.conn).await.unwrap().iter().map(|t| t.title.to_owned()).collect();
+        let filtered_tags = fuzzy_search(query, tags);
+        
+        //Score jots
+        let mut filtered_jots: Vec<(i64, models::Jot)> = vec![];
+        for jot in jots {
+            //Fuzzy score
+            let mut score;
+            let result = best_match(query, &jot.text);
+            match result {
+                Option::Some(s) => score = s.score(),
+                Option::None => score = 0
+            }
+            //let mut score = matcher.fuzzy_match(jot.text.as_str(), query).unwrap_or(0);
+            
+            //Tag score
+            let tags = get_tags_for_jot(&mut self.conn, jot.id).await.unwrap();
+            let filtered_tag_titles: Vec<String> = filtered_tags.iter().map(|t| t.1.clone()).collect();
+            for tag in tags {
+                if filtered_tag_titles.contains(&tag.title) {
+                    score += 1;
+                }
+            }
+
+            //Add scored jot to filtered list
+            if score > 0 {
+                println!("{}", score);
+                filtered_jots.push((score.try_into().unwrap_or(0), jot));
+            }
+        }
+        
+        //Sort by score
+        filtered_jots.sort_by(|a, b| a.0.cmp(&b.0));
+        Ok(filtered_jots.iter().map(|j| j.1.to_owned()).collect())
+    }
+
     pub async fn search_tags(&mut self, query: &str, tag_ids: Vec<i64>) -> Result<Vec<models::Tag>, sqlx::Error>{
         let tags = get_all_tags(&mut self.conn).await?;
         //fuzzy search tags

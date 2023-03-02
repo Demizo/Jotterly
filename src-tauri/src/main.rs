@@ -10,7 +10,7 @@ use database::bridge::Bridge;
 #[tauri::command]
 async fn search_jots(query: String) -> Vec<database::models::Jot> {
     let mut bridge = Bridge::new().await;
-    bridge.smart_search_jots(query.as_str()).await.unwrap()
+    bridge.sublime_search_jots(query.as_str()).await.unwrap()
 }
 #[tauri::command]
 async fn search_tags(query: String, tag_ids: Vec<i64>) -> Vec<database::models::Tag> {

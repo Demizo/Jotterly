@@ -21,6 +21,7 @@ async-std = { version = "1", features = [ "attributes" ] }
 dotenvy = "0.15"
 chrono = "0.4.23"
 fuzzy-matcher = "0.3.7"
+sublime_fuzzy = "0.7.0"
 
 [features]
 # by default Tauri runs in production mode

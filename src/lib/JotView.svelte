@@ -7,7 +7,7 @@
   let showTagPopup = false;
   export let search_jots;
   export let jot = {id: Number, text: String, img_path: String, time_create: String, time_modified: String };
-
+  
   let tags = [{id: Number, title: String, color: String, priority: Number, time_create: String, time_modified: String}];
   async function get_all_tags_for_jot() {
     tags = await invoke("get_all_tags_for_jot", {id: jot.id});

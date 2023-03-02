@@ -11,12 +11,12 @@
       query = "";
       visible = false;
     }
-    let tags_list = [{id: Number, title: String, color: String, priority: Number, time_create: String, time_modified: String}];
+    let tags_list: {id: Number, title: String, color: String, priority: Number, time_create: String, time_modified: String}[];
     async function search_tags() {
       if (query.trim().length > 2 || query.trim().length == 0 && pending == false) {
         let tag_ids = tags.map(tag => tag.id);
         console.log(tag_ids);
-        tags_list = await invoke("search_tags", {query: query, tagIds: tag_ids}).catch(() => console.log("failed to get tags"));
+        tags_list = await invoke("search_tags", {query: query, tagIds: tag_ids}).catch(() => console.log("failed to get tags")) as {id: Number, title: String, color: String, priority: Number, time_create: String, time_modified: String}[];
         console.log(tags_list);
       }
     }
@@ -30,7 +30,7 @@
       search_tags();
     }
     async function add_new_tag_to_jot() {
-      let tag = await invoke("add_new_tag_to_jot", {title: query, jotId: jotId}).catch(() => console.log("failed to add new tag"));
+      let tag = await invoke("add_new_tag_to_jot", {title: query, jotId: jotId}).catch(() => console.log("failed to add new tag")) as {id: NumberConstructor, title: StringConstructor, color: StringConstructor, priority: NumberConstructor, time_create: StringConstructor, time_modified: StringConstructor};
       tags.push(tag);
       tags = [...tags];
       search_tags();
