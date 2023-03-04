@@ -91,7 +91,7 @@ impl Bridge {
                     score += 1;
                 }
             }
-
+            
             //Add scored jot to filtered list
             if score > 0 {
                 filtered_jots.push((score, jot));
@@ -117,10 +117,9 @@ impl Bridge {
             let mut score;
             let result = best_match(query, &jot.text);
             match result {
-                Option::Some(s) => score = s.score(),
+                Option::Some(s) => score = s.score().try_into().unwrap_or(0),
                 Option::None => score = 0
             }
-            //let mut score = matcher.fuzzy_match(jot.text.as_str(), query).unwrap_or(0);
             
             //Tag score
             let tags = get_tags_for_jot(&mut self.conn, jot.id).await.unwrap();
@@ -133,8 +132,7 @@ impl Bridge {
 
             //Add scored jot to filtered list
             if score > 0 {
-                println!("{}", score);
-                filtered_jots.push((score.try_into().unwrap_or(0), jot));
+                filtered_jots.push((score, jot));
             }
         }
         

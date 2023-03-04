@@ -3,8 +3,9 @@
   import { marked } from 'marked';
   import EditTagsPopup from './EditTagsPopup.svelte';
   import { focusTrap } from 'svelte-focus-trap';
-
+  
   let showTagPopup = false;
+  let focusText = true;
   export let search_jots;
   export let jot = {id: Number, text: String, img_path: String, time_create: String, time_modified: String };
   
@@ -16,43 +17,13 @@
   get_all_tags_for_jot().catch(() => console.log("failed to get jot tags"));
   //TODO: this is a terrible way of doing the date
   let date = jot.time_modified.toString().split('T')[0];
-  
-  let isEditing = false;
-  let text = jot.text;
-  let temptext = text;
-  let actionButtons;
-  function toggleEditing() {
-    temptext = text;
-    if (isEditing) {
-      isEditing = false;
-      zIndex(0);
-    } else {
-      isEditing = true;
-      zIndex(100);
-    }
+
+  function editText() {
+    focusText = true;
+    showTagPopup = true;
   }
-  function zIndex(index: Number){
-    actionButtons.style.zIndex = index;
-  }
-  function saveChanges() {
-    zIndex(0);
-    text = temptext;
-    isEditing = false;
-    save_jot_text();
-  }
-  async function save_jot_text() {
-    await invoke("update_jot_text", {id: jot.id, text: text, img_path: jot.img_path});
-  }
-  async function delete_jot() {
-    await invoke("delete_jot", {id: jot.id});
-    search_jots();
-  }
-  function calcTextAreaHeight(event) {
-    const textarea = event.target;
-    textarea.style.height = "auto";
-    textarea.style.height = `${textarea.scrollHeight}px`;
-  }
-  function displayTagPopup() {
+  function editTags() {
+    focusText = false;
     showTagPopup = true;
   }
 </script>
@@ -61,37 +32,19 @@
   <div class="box">
     <div class="action-buttons">
       <div class="date-label">{date}</div>
-      <div bind:this={actionButtons}>
-        {#if !isEditing}
-        <!-- <button class="action-button">c</button> -->
-        <button class="action-button" on:click={toggleEditing}>e</button>
-        {:else}
-        <div use:focusTrap>          
-          <button class="action-button" on:click={delete_jot}>d</button>
-          <button disabled={temptext.toString().trim().length <= 0 || temptext === text} class="action-button" on:click={saveChanges}>s</button>
-          <button class="action-button" on:click={toggleEditing}>x</button>
-        </div>
-        {/if}
+      <div>
+        <button class="action-button" on:click={editText}>e</button>
       </div>
-    
     </div>
-    {#if !isEditing}
-      <div class="text-area">{@html marked(text)}</div>
-    {:else}
-    <!-- TODO: Focus trap will leave element if this and add-tag dont have a tabIndex of -1-->
-    <textarea tabIndex="-1" autofocus style="z-index: 999; position: relative;"  on:select={calcTextAreaHeight} on:input={calcTextAreaHeight} bind:value={temptext}></textarea>
-    {/if}
+    <div class="text-area">{@html marked(jot.text)}</div>
     {#each tags as tag, i}
       <div class="tag">{tag.title}</div>
     {/each}
     <!-- TODO: Remove inability focus add tags?-->
-    <button tabIndex="-1" class="add-tag" on:click={displayTagPopup}>+</button>
+    <button tabIndex="-1" class="add-tag" on:click={editTags}>+</button>
   </div>
 </div>
-<EditTagsPopup jotId={jot.id} bind:visible={showTagPopup} bind:tags={tags} />
-{#if isEditing}
-<div class="overlay" tabindex="1"></div>
-{/if}
+<EditTagsPopup jotId={jot.id} bind:visible={showTagPopup} bind:tags={tags} bind:jot={jot} bind:search_jots={search_jots} bind:focusText={focusText}/>
 <style>
   button:disabled {
     background-color: #383838;

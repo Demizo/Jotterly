@@ -2,11 +2,17 @@
     import { invoke } from "@tauri-apps/api/tauri";
     import { focusTrap } from 'svelte-focus-trap';
 
+    export let focusText = true;
     export let visible = false;
     export let jotId: Number;
+    export let jot = {id: Number, text: String, img_path: String, time_create: String, time_modified: String };
+    export let search_jots;
     export let tags = [{id: Number, title: String, color: String, priority: Number, time_create: String, time_modified: String}];
     let query = "";
     let pending = false;
+    let text = jot.text;
+    let temptext = text;
+    
     function closePopup() {
       query = "";
       visible = false;
@@ -35,11 +41,42 @@
       tags = [...tags];
       search_tags();
     }
+    function saveChanges() {
+      text = temptext;
+      jot.text = text;
+      save_jot_text();
+    }
+    async function save_jot_text() {
+      await invoke("update_jot_text", {id: jot.id, text: text, img_path: jot.img_path});
+    }
+    async function delete_jot() {
+      await invoke("delete_jot", {id: jot.id});
+      search_jots();
+    }
+    function calcTextAreaHeight(event) {
+      const textarea = event.target;
+      textarea.style.height = "auto";
+      textarea.style.height = `${textarea.scrollHeight}px`;
+    }
+    
   </script>
   
   {#if visible}
     <div class="popup">
       <div class="popup-content" use:focusTrap>
+        <div class="action-buttons">
+          <div></div>
+          <div>
+            <button class="action-button" on:click={delete_jot}>d</button>
+            <button disabled={temptext.toString().trim().length <= 0 || temptext === text} class="action-button" on:click={saveChanges}>s</button>
+            <button class="action-button" on:click={closePopup}>x</button>
+          </div>
+        </div>
+        {#if focusText}
+          <textarea autofocus on:select={calcTextAreaHeight} on:input={calcTextAreaHeight} bind:value={temptext}></textarea>
+        {:else}
+        <textarea on:select={calcTextAreaHeight} on:input={calcTextAreaHeight} bind:value={temptext}></textarea>
+        {/if}
         <div class="left-row">
           <p class="thin-label">Remove Tags...</p>
         </div>
@@ -53,7 +90,11 @@
         {:else}
           <p>No tags...</p>
         {/each}
-        <input autofocus style="width: 27em; margin-bottom: 1em;" inputmode="search" on:keyup={search_tags} placeholder="Search..." bind:value={query}/>
+        {#if focusText}
+          <input style="width: 27em; margin-bottom: 1em;" inputmode="search" on:keyup={search_tags} placeholder="Search..." bind:value={query}/>
+        {:else}
+          <input autofocus style="width: 27em; margin-bottom: 1em;" inputmode="search" on:keyup={search_tags} placeholder="Search..." bind:value={query}/>
+        {/if}
         {#await search_tags()}
           <p>Loading...</p>
         {:then}
@@ -85,7 +126,6 @@
         {:catch error}
           <p>Error: {error.message}</p>
         {/await}
-        <button class="close-button" on:click={closePopup}>x</button>
       </div>
       
     </div>
@@ -109,14 +149,16 @@
       background-color: #2f2f2f;
       border-radius: 10px;
       border: 2px solid #464444;
-      padding: 20px;
-      margin-top: 1em;
+      padding: 5px;
+      margin-top: 0em;
       width: 30em; 
+      max-height: 40em;
       word-wrap: break-word;
       white-space: pre-line;
       text-align: left;
       box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
       position: relative;
+      overflow-y: scroll;
     }
     
     .close-button {
@@ -135,8 +177,39 @@
       margin-bottom: 10px;
       cursor: pointer;
     }
-    button {
-      margin-top: 10px;
+    .action-buttons {
+      display: flex;
+
+      justify-content: space-between;
     }
+    .action-button {
+      display: inline-block;
+      padding: 0px 6px;
+      border-radius: 50px;
+      background-color: #383838;
+      color: #757474;
+      font-size: 20px;
+      font-weight: bold;
+      text-align: center;
+      cursor: pointer;
+      align-content: end;
+    }
+    button:disabled {
+      background-color: #383838;
+      color: #75747446;
+    }
+    textarea {
+      border-radius: 10px;
+      background-color: #7574741a;
+      width: 28.7em;
+      height: auto;
+      font-size: 16px;
+      color: white;
+      border: 0em;
+      padding: 10px;
+      resize: none;
+      overflow: hidden;
+    }
+  
   </style>
   
