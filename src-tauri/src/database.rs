@@ -1,14 +1,55 @@
-use std::{env};
+use std::{env, fs::File, path::Path};
 
 use dotenvy::dotenv;
-use sqlx::{SqliteConnection, Connection, sqlite::SqliteQueryResult};
+use sqlx::{SqliteConnection, Connection, sqlite::{SqliteQueryResult, SqliteConnectOptions}, migrate::Migrator};
 
 pub mod models;
 pub mod bridge;
+
+async fn create_database() -> Result<SqliteConnection, sqlx::Error> {
+    // Get the path to the config directory and append the database name
+    let mut path = dirs::config_dir().expect("could not get config dir");
+    path.push("jotterly");
+    std::fs::create_dir_all(&path).expect("could not create dir");
+    
+    path.push("jotterly.db");
+    
+    // Create a new database or connect to an existing one
+    let mut conn = SqliteConnection::connect(&format!("sqlite://{}?mode=rwc", path.to_str().unwrap())).await?;
+    
+    //TODO: This should be done with migrations but I couldn't get the liftimes to work with Tauri commands
+    sqlx::query!(
+        "
+        CREATE TABLE IF NOT EXISTS jots (
+            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            text TEXT NOT NULL,
+            img_path TEXT,
+            time_create DATETIME NOT NULL DEFAULT (DATETIME('now')),
+            time_modified DATETIME NOT NULL DEFAULT (DATETIME('now'))
+        );
+        CREATE TABLE IF NOT EXISTS tags (
+            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            title TEXT UNIQUE NOT NULL,
+            color TEXT,
+            priority INTEGER NOT NULL DEFAULT 0,
+            time_create DATETIME NOT NULL DEFAULT (DATETIME('now')),
+            time_modified DATETIME NOT NULL DEFAULT (DATETIME('now'))
+        );
+        CREATE TABLE IF NOT EXISTS jot_tags (
+            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            jot_id INTEGER NOT NULL,
+            tag_id INTEGER NOT NULL,
+            FOREIGN KEY (jot_id) REFERENCES jots (id)
+            FOREIGN KEY (tag_id) REFERENCES tags (id)
+        );
+        "
+    ).execute(&mut conn).await.unwrap();
+
+    Ok(conn)
+}
+
 pub async fn establish_connection() -> SqliteConnection {
-    dotenv().ok();
-    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-    SqliteConnection::connect(&database_url).await.expect("Can't connect to {database_url}")
+    create_database().await.unwrap()
 }
 
 /* Insert Entries */
