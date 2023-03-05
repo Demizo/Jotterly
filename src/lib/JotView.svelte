@@ -13,7 +13,6 @@
   let tags = [{id: Number, title: String, color: String, priority: Number, time_create: String, time_modified: String}];
   async function get_all_tags_for_jot() {
     tags = await invoke("get_all_tags_for_jot", {id: jot.id});
-    console.log(tags);
   }
   get_all_tags_for_jot().catch(() => console.log("failed to get jot tags"));
 

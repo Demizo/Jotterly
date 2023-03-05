@@ -12,6 +12,7 @@ async fn search_jots(query: String) -> Vec<database::models::Jot> {
     let mut bridge = Bridge::new().await;
     bridge.sublime_search_jots(query.as_str()).await.unwrap()
 }
+//TODO: this method is not being used
 #[tauri::command]
 async fn get_jot(id: i64) -> database::models::Jot {
     let mut bridge = Bridge::new().await;

@@ -9,7 +9,6 @@
   async function search_jots() {
     if (query.trim().length > 2 || query.trim().length == 0 ) {
       jots = await invoke("search_jots", {query: query});
-      console.log(jots);
     }
   }
   let new_jot_id = Number;

@@ -8,6 +8,7 @@
     export let jot = {id: Number, text: String, img_path: String, time_create: String, time_modified: String };
     export let search_jots;
     export let tags = [{id: Number, title: String, color: String, priority: Number, time_create: String, time_modified: String}];
+    let temp_tags = tags.slice(0, tags.length);
     let query = "";
     let pending = false;
     let text = jot.text;
@@ -15,36 +16,63 @@
     
     function closePopup() {
       query = "";
+      temptext = text;
+      temp_tags = tags.slice(0, tags.length);
       visible = false;
     }
     let tags_list: {id: Number, title: String, color: String, priority: Number, time_create: String, time_modified: String}[];
     async function search_tags() {
       if (query.trim().length > 2 || query.trim().length == 0 && pending == false) {
-        let tag_ids = tags.map(tag => tag.id);
-        console.log(tag_ids);
+        let tag_ids = temp_tags.map(tag => tag.id);
         tags_list = await invoke("search_tags", {query: query, tagIds: tag_ids}).catch(() => console.log("failed to get tags")) as {id: Number, title: String, color: String, priority: Number, time_create: String, time_modified: String}[];
-        console.log(tags_list);
+        tags_list = tags_list.filter(t => !temp_tags.map(tag => tag.title).includes(t.title));
       }
     }
-    async function add_tag_to_jot(tag_id: Number) {
-      await invoke("add_tag_to_jot", {tagId: tag_id, jotId: jotId}).catch(() => console.log("failed to add tag"));
-    }
-    async function remove_tag_from_jot(tag_id: Number) {
-      pending = true;
-      await invoke("remove_tag_from_jot", {tagId: tag_id, jotId: jotId}).catch(() => console.log("failed to remove tag"));
-      pending = false;
-      search_tags();
-    }
     async function add_new_tag_to_jot() {
-      let tag = await invoke("add_new_tag_to_jot", {title: query, jotId: jotId}).catch(() => console.log("failed to add new tag")) as {id: NumberConstructor, title: StringConstructor, color: StringConstructor, priority: NumberConstructor, time_create: StringConstructor, time_modified: StringConstructor};
-      tags.push(tag);
-      tags = [...tags];
+      temp_tags.push({id: -1, title: query, color: "", priority: 0, time_create: "", time_modified: ""});
+      temp_tags = [...temp_tags];
+      query = "";
       search_tags();
     }
-    function saveChanges() {
+    function add_tag(tag){
+        temp_tags.push(tag);
+        temp_tags = [...temp_tags];
+    }
+    function remove_tag(title: String){
+      temp_tags = temp_tags.filter(t => t.title != title);
+    }
+    async function save_jot_tags() {
+        let new_tags = temp_tags.filter((t) => t.id == -1);
+        //filter out new tags
+        temp_tags = temp_tags.filter((t) => t.id != -1);
+        
+        let remove_tags = tags.filter((t) => !temp_tags.map((tag) => tag.title).includes(t.title));
+        let add_tags = temp_tags.filter((t) => !tags.map((tag) => tag.title).includes(t.title));
+
+        //remove tags
+        for(let i = 0; i < remove_tags.length; i++) {
+          await invoke("remove_tag_from_jot", {tagId: remove_tags[i].id, jotId: jotId}).catch(() => console.log("failed to remove tag"));
+        }
+        
+        //add tags
+        for(let i = 0; i < add_tags.length; i++) {
+          await invoke("add_tag_to_jot", {tagId: add_tags[i].id, jotId: jotId}).catch(() => console.log("failed to add tag"));
+        }
+        
+        //create and add new tags
+        for(let i = 0; i < new_tags.length; i++) {
+          let tag = await invoke("add_new_tag_to_jot", {title: new_tags[i].title, jotId: jotId}).catch(() => console.log("failed to add new tag")) as {id: NumberConstructor, title: StringConstructor, color: StringConstructor, priority: NumberConstructor, time_create: StringConstructor, time_modified: StringConstructor};
+          add_tag(tag);
+        }
+        
+    }
+    async function saveChanges() {
       text = temptext;
+      await save_jot_tags();
+      await save_jot_text();
       jot.text = text;
-      save_jot_text();
+      tags = temp_tags.slice(0, temp_tags.length);
+      await search_tags();
     }
     async function save_jot_text() {
       await invoke("update_jot_text", {id: jot.id, text: text, img_path: jot.img_path});
@@ -53,11 +81,6 @@
       await invoke("delete_jot", {id: jot.id});
       search_jots();
     }
-    function calcTextAreaHeight(event) {
-      const textarea = event.target;
-      textarea.style.height = "auto";
-      textarea.style.height = `${textarea.scrollHeight}px`;
-    }
     
   </script>
   
@@ -65,35 +88,32 @@
     <div class="popup">
       <div class="popup-content" use:focusTrap>
         <div class="action-buttons">
-          <div></div>
+          <button class="action-button" on:click={delete_jot}>d</button>
           <div>
-            <button class="action-button" on:click={delete_jot}>d</button>
-            <button disabled={temptext.toString().trim().length <= 0 || temptext === text} class="action-button" on:click={saveChanges}>s</button>
+            <button disabled={temptext.toString().trim().length <= 0 || (temptext === text && (temp_tags.length === tags.length && tags.every((t) => temp_tags.includes(t))))} class="action-button" on:click={saveChanges}>s</button>
             <button class="action-button" on:click={closePopup}>x</button>
           </div>
         </div>
         {#if focusText}
-          <textarea autofocus on:select={calcTextAreaHeight} on:input={calcTextAreaHeight} bind:value={temptext}></textarea>
+          <textarea autofocus bind:value={temptext}></textarea>
         {:else}
-        <textarea on:select={calcTextAreaHeight} on:input={calcTextAreaHeight} bind:value={temptext}></textarea>
+        <textarea bind:value={temptext}></textarea>
         {/if}
         <div class="left-row">
           <p class="thin-label">Remove Tags...</p>
         </div>
-        {#each tags as tag, i}
+        {#each temp_tags as tag, i}
           <button on:click={() => {
-            remove_tag_from_jot(tag.id)
-            // force reload of tags list
-            tags = tags.filter(t => t.id != tag.id);
+            remove_tag(tag.title);
             search_tags();
           }} class="tag">{tag.title}</button>
         {:else}
           <p>No tags...</p>
         {/each}
         {#if focusText}
-          <input style="width: 27em; margin-bottom: 1em;" inputmode="search" on:keyup={search_tags} placeholder="Search..." bind:value={query}/>
+          <input style="width: 27em; margin-bottom: 1em;" inputmode="search" on:keyup={search_tags} placeholder="Search Tags..." bind:value={query}/>
         {:else}
-          <input autofocus style="width: 27em; margin-bottom: 1em;" inputmode="search" on:keyup={search_tags} placeholder="Search..." bind:value={query}/>
+          <input autofocus style="width: 27em; margin-bottom: 1em;" inputmode="search" on:keyup={search_tags} placeholder="Search Tags..." bind:value={query}/>
         {/if}
         {#await search_tags()}
           <p>Loading...</p>
@@ -102,7 +122,7 @@
             <p class="thin-label">Add Tags...</p>
           </div>
          {#if !tags_list.map(tag => tag.title).includes(query)
-          && !tags.map(tag => tag.title).includes(query)
+          && !temp_tags.map(tag => tag.title).includes(query)
           && query.trim().length > 2}
             <div class="left-row">
               <p style="color: #757474;">Create new tag: </p>
@@ -113,11 +133,7 @@
           
           {#each tags_list as tag, i}
             <button on:click={() => {
-                add_tag_to_jot(tag.id)
-                query = "";
-                // force reload of tags list
-                tags.push(tag);
-                tags = [...tags];
+                add_tag(tag);
                 search_tags();
             }} class="tag">{tag.title}</button>
           {:else}
@@ -203,13 +219,13 @@
       border-radius: 10px;
       background-color: #7574741a;
       width: 28.7em;
-      height: auto;
+      min-height: 7em;
       font-size: 16px;
       color: white;
       border: 0em;
       padding: 10px;
-      resize: none;
-      overflow: hidden;
+      resize: vertical;
+      overflow-y: scroll;
     }
   
   </style>
