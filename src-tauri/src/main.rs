@@ -13,6 +13,11 @@ async fn search_jots(query: String) -> Vec<database::models::Jot> {
     bridge.sublime_search_jots(query.as_str()).await.unwrap()
 }
 #[tauri::command]
+async fn get_jot(id: i64) -> database::models::Jot {
+    let mut bridge = Bridge::new().await;
+    bridge.fetch_new_jot(id).await
+}
+#[tauri::command]
 async fn search_tags(query: String, tag_ids: Vec<i64>) -> Vec<database::models::Tag> {
     let mut bridge = Bridge::new().await;
     bridge.search_tags(query.as_str(), tag_ids).await.unwrap()
@@ -60,7 +65,7 @@ async fn delete_jot(id: i64) {
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![search_jots,get_all_tags_for_jot,get_all_tags,add_tag_to_jot,add_new_tag_to_jot,remove_tag_from_jot,search_tags,update_jot_text,create_jot,delete_jot])
+        .invoke_handler(tauri::generate_handler![search_jots,get_all_tags_for_jot,get_all_tags,add_tag_to_jot,add_new_tag_to_jot,remove_tag_from_jot,search_tags,update_jot_text,create_jot,delete_jot,get_jot])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

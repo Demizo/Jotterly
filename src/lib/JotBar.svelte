@@ -1,7 +1,8 @@
 <script lang="ts">
   import { invoke } from "@tauri-apps/api/tauri";
   import JotView from "$lib/JotView.svelte";
-  
+  import EditJotPopup from './EditJotPopup.svelte';
+
   let query = "";
   let jots = [{id: Number, text: String, img_path: String, time_create: String, time_modified: String }];
   let tags_list = [{id: Number, title: String, color: String, priority: Number, time_create: String, time_modified: String}];
@@ -11,10 +12,10 @@
       console.log(jots);
     }
   }
+  let new_jot_id = Number;
   async function create_jot() {
-    let jotId = await invoke("create_jot", {text: query, img_path: undefined});
-    search_jots();
-    console.log(jotId);
+    new_jot_id = await invoke("create_jot", {text: query, img_path: undefined});
+    await search_jots();
   }
 </script>
 
@@ -26,7 +27,6 @@
     <input autofocus inputmode="search" on:keyup={search_jots} placeholder="Search or Jot..." bind:value={query} />
   </div>
 </div>
-
 {#await search_jots()}
   <!-- Show a loading indicator or message until the data is ready -->
   <p>Loading...</p>
@@ -36,7 +36,7 @@
     <button on:click={create_jot}>New Jot + "{query}"</button>
   {/if}
   {#each jots as jot (jot.id)}
-    <JotView search_jots={search_jots} jot={jot}/> 
+      <JotView search_jots={search_jots} jot={jot} bind:new_jot_id={new_jot_id}/>
   {:else}
     No Jots
   {/each}

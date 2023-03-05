@@ -159,6 +159,7 @@
       box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
       position: relative;
       overflow-y: scroll;
+      scrollbar-color: #464444 rgba(0, 0, 0, 0);
     }
     
     .close-button {
