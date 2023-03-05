@@ -25,33 +25,51 @@
   <div class="row">
     <input autofocus inputmode="search" on:keyup={search_jots} placeholder="Search or Jot..." bind:value={query} />
   </div>
+  {#if query.trim().length > 2}
+    <button on:click={create_jot}>New Jot + "{query}"</button>
+  {/if}
 </div>
 {#await search_jots()}
   <!-- Show a loading indicator or message until the data is ready -->
   <p>Loading...</p>
 {:then}
   <!-- The data is ready, so render it -->
-  {#if query.trim().length > 2}
-    <button on:click={create_jot}>New Jot + "{query}"</button>
-  {/if}
+  <div class="list">
   {#each jots as jot (jot.id)}
       <JotView search_jots={search_jots} jot={jot} bind:new_jot_id={new_jot_id}/>
   {:else}
     No Jots
   {/each}
+  </div>
 {:catch error}
   <!-- Handle any errors that occur while fetching or processing the data -->
   <p>Error: {error.message}</p>
 {/await}
+<div class="footer">
 
+</div>
 <style>
   .header {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    height: 50px;
+    height: 10em;
     padding: 10px;
-    box-sizing: border-box;
+    background: linear-gradient(to top, var(--backround-color-trans) 0%, var(--backround-color) 20%);
+    /* box-sizing: border-box; */
+  }
+  .footer {
+    position: fixed;
+    top: calc(100vh - 2em);
+    left: 0;
+    right: 0;
+    height: 2em;
+    background: linear-gradient(to bottom, var(--backround-color-trans) 0%, var(--backround-color) 80%);
+  }
+  .list {
+    margin-top: 10em;
+    /* overflow-y: auto; */
+    /* max-height: calc(100vh - 10em); */
   }
 </style>

@@ -125,7 +125,7 @@
           && !temp_tags.map(tag => tag.title).includes(query)
           && query.trim().length > 2}
             <div class="left-row">
-              <p style="color: #757474;">Create new tag: </p>
+              <p style="color: var(--foreground-font-color-secondary);">Create new tag: </p>
               <button on:click={add_new_tag_to_jot} class="tag">{query}</button>
             </div>
             
@@ -146,87 +146,4 @@
       
     </div>
   {/if}
-  
-  <style>
-    .popup {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 9999;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-  
-    .popup-content {
-      background-color: #2f2f2f;
-      border-radius: 10px;
-      border: 2px solid #464444;
-      padding: 5px;
-      margin-top: 0em;
-      width: 30em; 
-      max-height: 40em;
-      word-wrap: break-word;
-      white-space: pre-line;
-      text-align: left;
-      box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
-      position: relative;
-      overflow-y: scroll;
-      scrollbar-color: #464444 rgba(0, 0, 0, 0);
-    }
-    
-    .close-button {
-      position: absolute;
-      top: 0em;
-      right: 0em;
-      display: inline-block;
-      padding: 0px 6px;
-      border-radius: 50px;
-      background-color: #383838;
-      color: #757474;
-      font-size: 20px;
-      font-weight: bold;
-      text-align: center;
-      margin-right: 10px;
-      margin-bottom: 10px;
-      cursor: pointer;
-    }
-    .action-buttons {
-      display: flex;
-
-      justify-content: space-between;
-    }
-    .action-button {
-      display: inline-block;
-      padding: 0px 6px;
-      border-radius: 50px;
-      background-color: #383838;
-      color: #757474;
-      font-size: 20px;
-      font-weight: bold;
-      text-align: center;
-      cursor: pointer;
-      align-content: end;
-    }
-    button:disabled {
-      background-color: #383838;
-      color: #75747446;
-    }
-    textarea {
-      border-radius: 10px;
-      background-color: #7574741a;
-      width: 28.7em;
-      min-height: 7em;
-      font-size: 16px;
-      color: white;
-      border: 0em;
-      padding: 10px;
-      resize: vertical;
-      overflow-y: scroll;
-    }
-  
-  </style>
   

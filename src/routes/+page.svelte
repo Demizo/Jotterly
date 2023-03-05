@@ -2,6 +2,13 @@
   import Greet from "$lib/Greet.svelte";
   import JotBar from "$lib/JotBar.svelte";
   import JotView from "$lib/JotView.svelte";
+
+  // Get the root element
+const root = document.documentElement;
+
+// Update the value of the --backround-color variable
+//root.style.setProperty('--backround-color', '#ff7b00');
+//root.style.setProperty('--backround-color-trans', '#ff7b0000');
 </script>
 
 <!-- <div class="row">
