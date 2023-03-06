@@ -13,8 +13,8 @@
   line-height: 24px;
   font-weight: 400;
   
-  color: #0f0f0f;
-  background-color: #000000;
+  color: var(--foreground-font-color);
+  background-color: var(--backround-color);
   
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -53,7 +53,7 @@
 }
 .thin-label {
   font-weight: bold;
-  color: #757474;
+  color: var(--foreground-font-color-secondary);
   margin: 0em;
 }
 .tag {
@@ -201,8 +201,8 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  color: #0f0f0f;
-  background-color: #ffffff;
+  color: var(--foreground-font-color);
+  background-color: var(--backround-color-dark);
   transition: border-color 0.25s;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
 }
@@ -265,7 +265,7 @@ input {
 
   input,
   button {
-    color: #ffffff;
+    color: var(--foreground-font-color);
     background-color: var(--backround-color-dark);
   }
 }
