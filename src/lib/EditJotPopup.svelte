@@ -1,8 +1,8 @@
 <script lang="ts">
     import { invoke } from "@tauri-apps/api/tauri";
     import { focusTrap } from 'svelte-focus-trap';
-
-    export let focusText = true;
+    import { onMount } from 'svelte';
+    
     export let visible = false;
     export let jotId: Number;
     export let jot = {id: Number, text: String, img_path: String, time_create: String, time_modified: String };
@@ -19,6 +19,12 @@
       temptext = text;
       temp_tags = tags.slice(0, tags.length);
       visible = false;
+      document.body.style.overflow = 'auto';
+    }
+    function handleEscDown(event) {
+      if (visible && event.key === 'Escape') {
+        closePopup();
+      }
     }
     let tags_list: {id: Number, title: String, color: String, priority: Number, time_create: String, time_modified: String}[];
     async function search_tags() {
@@ -81,12 +87,14 @@
       await invoke("delete_jot", {id: jot.id});
       search_jots();
     }
-    
+    document.addEventListener('keydown', handleEscDown);
   </script>
   
   {#if visible}
-    <div class="popup">
-      <div class="popup-content" use:focusTrap>
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
+    <div class="popup" tabindex="-1" on:click={closePopup}>
+      <!-- svelte-ignore a11y-click-events-have-key-events -->
+      <div class="popup-content" use:focusTrap on:click|stopPropagation>
         <div class="action-buttons">
           <button class="action-button" on:click={delete_jot}>d</button>
           <div>
@@ -94,11 +102,8 @@
             <button class="action-button" on:click={closePopup}>x</button>
           </div>
         </div>
-        {#if focusText}
-          <textarea autofocus bind:value={temptext}></textarea>
-        {:else}
-        <textarea bind:value={temptext}></textarea>
-        {/if}
+        <!-- svelte-ignore a11y-autofocus -->
+        <textarea autofocus bind:value={temptext}></textarea>
         <div class="left-row">
           <p class="thin-label">Remove Tags...</p>
         </div>
@@ -110,11 +115,7 @@
         {:else}
           <p>No tags...</p>
         {/each}
-        {#if focusText}
-          <input style="width: 27em; margin-bottom: 1em;" inputmode="search" on:keyup={search_tags} placeholder="Search Tags..." bind:value={query}/>
-        {:else}
-          <input autofocus style="width: 27em; margin-bottom: 1em;" inputmode="search" on:keyup={search_tags} placeholder="Search Tags..." bind:value={query}/>
-        {/if}
+        <input style="width: 27em; margin-bottom: 1em;" inputmode="search" on:keyup={search_tags} placeholder="Search Tags..." bind:value={query}/>
         {#await search_tags()}
           <p>Loading...</p>
         {:then}

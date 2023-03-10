@@ -5,7 +5,6 @@
   import { focusTrap } from 'svelte-focus-trap';
   
   let showJotPopup = false;
-  let focusText = true;
   export let search_jots;
   export let jot = {id: Number, text: String, img_path: String, time_create: String, time_modified: String };
   export let new_jot_id;
@@ -21,37 +20,23 @@
     new_jot_id = Number;
     showJotPopup = true;
   }
-
-  //TODO: this is a terrible way of doing the date
-  let date = jot.time_modified.toString().split('T')[0];
   
-  function editText() {
-    focusText = true;
+  function editJot() {
     showJotPopup = true;
+    document.body.style.overflow = 'hidden';
   }
-  function editTags() {
-    focusText = false;
-    showJotPopup = true;
-  }
+
 </script>
 
 <div class="row">
-  <div class="box">
-    <div class="action-buttons">
-      <div class="date-label">{date}</div>
-      <div>
-        <button class="action-button" on:click={editText}>e</button>
-      </div>
-    </div>
+  <button class="box" on:click={editJot}>
     <div class="text-area">{@html marked(jot.text)}</div>
     {#each tags as tag, i}
       <div class="tag">{tag.title}</div>
-    {/each}
-    <!-- TODO: Remove inability focus add tags?-->
-    <button tabIndex="-1" class="add-tag" on:click={editTags}>+</button>
-  </div>
+    {/each}     
+  </button>
 </div>
 {#await get_all_tags_for_jot()}
 {:then}
-<EditJotPopup jotId={jot.id} bind:visible={showJotPopup} bind:tags={tags} bind:jot={jot} bind:search_jots={search_jots} bind:focusText={focusText}/>
+<EditJotPopup jotId={jot.id} bind:visible={showJotPopup} bind:tags={tags} bind:jot={jot} bind:search_jots={search_jots}/>
 {/await}

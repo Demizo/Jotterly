@@ -80,12 +80,25 @@
   margin-top: 1em;
   width: 30em; 
   word-wrap: break-word;
-  white-space: pre-line;
+  white-space: pre-wrap;
   text-align: left;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease-in-out;
+  transition: border-color 0.25s;
+  z-index: 0;
+}
+.box:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+  transform: scale(1.02);
+  transition: transform 0.2s ease-in-out;
+  transition: border-color 0.25s;
 }
 .box:hover {
   border-color: var(--primary-color);
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+  transform: scale(1.02);
+  transition: transform 0.2s ease-in-out;
   transition: border-color 0.25s;
 }
 .add-tag {    
@@ -184,6 +197,7 @@ a {
 }
 p {
   margin: 0em;
+  white-space: pre-wrap;
 }
 a:hover {
   color: #535bf2;

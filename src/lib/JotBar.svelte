@@ -20,7 +20,7 @@
 
 
 
-<div class="header">
+<div class="header" style="z-index: 100;">
   <h1>Jotterly</h1>
   <div class="row">
     <input autofocus inputmode="search" on:keyup={search_jots} placeholder="Search or Jot..." bind:value={query} />
