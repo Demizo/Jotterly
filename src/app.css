@@ -266,7 +266,6 @@ button {
 input {
   width: 500px;
 }
-
 @media (prefers-color-scheme: dark) {
   :root {
     color: var(--foreground-font-color);

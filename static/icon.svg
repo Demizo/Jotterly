@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="16"
+   height="16"
+   viewBox="0 0 4.2333333 4.2333332"
+   version="1.1"
+   id="svg135"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   sodipodi:docname="icon.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview137"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="true"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="true"
+     inkscape:zoom="10.35098"
+     inkscape:cx="14.104945"
+     inkscape:cy="2.946581"
+     inkscape:window-width="1315"
+     inkscape:window-height="1334"
+     inkscape:window-x="1229"
+     inkscape:window-y="15"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer4">
+    <inkscape:grid
+       type="xygrid"
+       id="grid2760"
+       dotted="false" />
+  </sodipodi:namedview>
+  <defs
+     id="defs132">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 2.1166666 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="4.2333333 : 2.1166666 : 1"
+       inkscape:persp3d-origin="2.1166666 : 1.4111111 : 1"
+       id="perspective2559" />
+  </defs>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="Backround 1">
+    <circle
+       style="font-weight:800;font-size:3.175px;font-family:'JetBrains Mono';-inkscape-font-specification:'JetBrains Mono Ultra-Bold';fill:#3c3836;fill-opacity:1;stroke:none;stroke-width:0.282222;stroke-dasharray:none"
+       id="path7560"
+       cx="6.8791666"
+       cy="2.1166666"
+       r="2.1166666" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer4"
+     inkscape:label="foreground">
+    <rect
+       style="fill:#fb4934;fill-opacity:1;stroke:none;stroke-width:0.571564"
+       id="rect345"
+       width="1.8520833"
+       height="0.26458341"
+       x="6.0854163"
+       y="0.92604172"
+       ry="0.1322917" />
+    <rect
+       style="fill:#fb4934;fill-opacity:1;stroke:none;stroke-width:0.629833"
+       id="rect345-3"
+       width="2.2489583"
+       height="0.26458341"
+       x="5.6885414"
+       y="0.52916676"
+       ry="0.1322917" />
+    <path
+       id="rect2782"
+       style="fill:#d3869b;fill-opacity:1;stroke-width:0.556794"
+       d="m 7.9374997,1.5875001 c 0,0 0,0.4157737 0,1.5308035 0,1.1150298 -1.5875,1.1150298 -1.5875,0 V 2.9104168 c 0,-0.2645834 0.5291667,-0.2645834 0.5291667,0 v 0.2078868 c 0,0.3212798 0.5291666,0.3212798 0.5291666,0 V 1.8520834 1.5875001 c 0,-0.2645833 0.5291667,-0.2645833 0.5291667,0 z"
+       sodipodi:nodetypes="czcssccccc" />
+    <circle
+       style="font-weight:800;font-size:3.175px;font-family:'JetBrains Mono';-inkscape-font-specification:'JetBrains Mono Ultra-Bold';fill:#3c3836;fill-opacity:1;stroke:none;stroke-width:0.282222;stroke-dasharray:none"
+       id="path7560-6"
+       cx="2.0505209"
+       cy="2.116667"
+       r="2.1166666" />
+    <rect
+       style="fill:#fb4934;fill-opacity:1;stroke:none;stroke-width:0.748352"
+       id="rect345-7"
+       width="1.5874999"
+       height="0.5291667"
+       x="1.3229166"
+       y="0.52916658"
+       ry="0.26458335" />
+    <rect
+       style="fill:#fb4934;fill-opacity:1;stroke:none;stroke-width:0.877521"
+       id="rect345-3-5"
+       width="2.1828125"
+       height="0.5291667"
+       x="0.52916658"
+       y="1.5874999"
+       ry="0.26458335" />
+    <path
+       id="rect2782-3"
+       style="fill:#d3869b;fill-opacity:1;stroke-width:0.556794"
+       d="m 2.9104167,1.3796132 c 0,0 0,0.4157737 0,1.5308035 0,1.1150298 -1.5875,1.1150298 -1.5875,0 V 2.7025299 c 0,-0.2645834 0.5291667,-0.2645834 0.5291667,0 v 0.2078868 c 0,0.3212798 0.5291666,0.3212798 0.5291666,0 V 1.6441965 1.3796132 c 0,-0.2645833 0.5291667,-0.2645833 0.5291667,0 z"
+       sodipodi:nodetypes="czcssccccc" />
+  </g>
+</svg>
