@@ -137,10 +137,14 @@
         {:then}
          {#if !tags_list.map(tag => tag.title).includes(query)
           && !temp_tags.map(tag => tag.title).includes(query)
-          && query.trim().length > 2}
+          && query.trim().length > 2 && query.trim().length < 42}
             <div class="left-row">
-              <p style="color: var(--foreground-font-color-secondary);">Create new tag: </p>
-              <button on:click={add_new_tag_to_jot} class="tag">{query}</button>
+              <button on:click={add_new_tag_to_jot} class="tag apply-tag">
+                <p>{query}</p>
+                <svg class="apply-icon" xmlns="http://www.w3.org/2000/svg" height="16px" viewBox="0 0 24 24" width="16px" fill="#000000">
+                  <path d="M0 0h24v24H0V0z" fill="none"/><path d="M18 13h-5v5c0 .55-.45 1-1 1s-1-.45-1-1v-5H6c-.55 0-1-.45-1-1s.45-1 1-1h5V6c0-.55.45-1 1-1s1 .45 1 1v5h5c.55 0 1 .45 1 1s-.45 1-1 1z"/>
+                </svg>
+              </button>
             </div>
             
          {/if}
@@ -155,8 +159,6 @@
                 <path d="M0 0h24v24H0V0z" fill="none"/><path d="M18 13h-5v5c0 .55-.45 1-1 1s-1-.45-1-1v-5H6c-.55 0-1-.45-1-1s.45-1 1-1h5V6c0-.55.45-1 1-1s1 .45 1 1v5h5c.55 0 1 .45 1 1s-.45 1-1 1z"/>
               </svg>
             </button>
-          {:else}
-            <p>No tags found...</p>
           {/each}
         {:catch error}
           <p>Error: {error.message}</p>
