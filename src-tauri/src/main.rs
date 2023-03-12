@@ -59,9 +59,9 @@ async fn update_jot_text(id: i64, text: String, img_path: Option<String>) {
     bridge.update_jot_text(id, text.as_str(), img_path).await;
 }
 #[tauri::command]
-async fn create_jot(text: String, img_path: Option<String>) -> i64 {
+async fn create_jot(text: String, img_path: Option<String>, tag_ids: Vec<i64>) -> i64 {
     let mut bridge = Bridge::new().await;
-    bridge.create_jot(text.as_str(), img_path).await.unwrap()
+    bridge.create_jot(text.as_str(), img_path, tag_ids).await.unwrap()
 }
 #[tauri::command]
 async fn delete_jot(id: i64) {

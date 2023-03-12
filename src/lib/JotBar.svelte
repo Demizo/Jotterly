@@ -18,11 +18,13 @@
     }
     update_height();
   }
+
   let new_jot_id = Number;
   async function create_jot() {
-    new_jot_id = await invoke("create_jot", {text: query, img_path: undefined});
+    new_jot_id = await invoke("create_jot", {text: query, img_path: undefined, tagIds: active_tags.map(t => t.id)});
     await search_jots();
   }
+
   function add_tag(tag: {id: Number, title: String, color: String, priority: Number, time_create: String, time_modified: String}){
       active_tags.push(tag);
       active_tags = [...active_tags];

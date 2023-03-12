@@ -15,8 +15,11 @@ impl Bridge {
     pub async fn update_jot_text(&mut self, id: i64, text: &str, img_path: Option<String>) {
         update_jot(&mut self.conn, id, text, img_path, chrono::Local::now().naive_local()).await.unwrap();
     }
-    pub async fn create_jot(&mut self, text: &str, img_path: Option<String>) -> Result<i64, sqlx::Error>{
+    pub async fn create_jot(&mut self, text: &str, img_path: Option<String>, tag_ids: Vec<i64>) -> Result<i64, sqlx::Error>{
         let result = insert_jot(&mut self.conn, text, img_path).await?;
+        for id in tag_ids.iter() {
+            self.add_tag_to_jot(id.to_owned(), result.last_insert_rowid()).await;
+        }
         Ok(result.last_insert_rowid())
     }
     pub async fn fetch_new_jot(&mut self, id: i64) -> models::Jot {
