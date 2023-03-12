@@ -1,6 +1,7 @@
 :root {
   --primary-color: #0bc734;
   --secondary-color: #0bc798;
+  --negative-color: #f33b3b;
   --backround-color: #383838;
   --backround-color-dark: #272727;
   --backround-color-trans: #38383800;
@@ -57,20 +58,28 @@
   margin: 0em;
 }
 .tag {
-  display: inline-block;
-  padding: 5px 10px;
+  display: inline-flex;
+  padding: 0px 5px;
+  height: 25px;
   border-radius: 50px;
   border-width: var(--highlight-thickness);
   background-color: var(--backround-color);
   color: var(--foreground-font-color);
   font-size: 14px;
   font-weight: bold;
-  text-align: center;
+  text-align: justify;
+  vertical-align: middle;
+  align-items: center;
   margin-right: 10px;
   margin-top: 10px;
   cursor: pointer;
   min-width: 3em;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+  justify-content: center;
+}
+.tag p {
+  position: relative;
+  top: 2.5px;
 }
 .box {
   background-color: var(--backround-highlight);
@@ -117,15 +126,15 @@
   top: 0em;
   right: 0em;
   display: inline-block;
-  padding: 0px 6px;
-  border-radius: 50px;
+  padding: 0em 4px;
+  border-radius: 25px;
   background-color: var(--backround-color);
   color: var(--foreground-font-color-secondary);
   font-size: 20px;
   font-weight: bold;
   text-align: center;
   cursor: pointer;
-  align-content: end;
+  justify-content: center;
 }
 .text-area{
   border-radius: 10px;
@@ -177,18 +186,6 @@
 .action-buttons {
   display: flex;
   justify-content: space-between;
-}
-.action-button {
-  display: inline-block;
-  padding: 0px 6px;
-  border-radius: 50px;
-  background-color: var(--backround-color);
-  color: var(--foreground-font-color-secondary);
-  font-size: 20px;
-  font-weight: bold;
-  text-align: center;
-  cursor: pointer;
-  align-content: end;
 }
 a {
   font-weight: 500;

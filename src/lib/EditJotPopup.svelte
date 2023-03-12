@@ -96,32 +96,45 @@
       <!-- svelte-ignore a11y-click-events-have-key-events -->
       <div class="popup-content" use:focusTrap on:click|stopPropagation>
         <div class="action-buttons">
-          <button class="action-button" on:click={delete_jot}>d</button>
+          <button class="action-button" on:click={delete_jot}>
+            <svg class="delete-icon" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="26px" viewBox="0 0 24 24" width="26px" fill="#000000">
+              <g><path d="M0,0h24v24H0V0z" fill="none"/></g><g><path d="M6,19c0,1.1,0.9,2,2,2h8c1.1,0,2-0.9,2-2V7H6V19z M9.17,12.59c-0.39-0.39-0.39-1.02,0-1.41c0.39-0.39,1.02-0.39,1.41,0 L12,12.59l1.41-1.41c0.39-0.39,1.02-0.39,1.41,0s0.39,1.02,0,1.41L13.41,14l1.41,1.41c0.39,0.39,0.39,1.02,0,1.41 s-1.02,0.39-1.41,0L12,15.41l-1.41,1.41c-0.39,0.39-1.02,0.39-1.41,0c-0.39-0.39-0.39-1.02,0-1.41L10.59,14L9.17,12.59z M18,4h-2.5 l-0.71-0.71C14.61,3.11,14.35,3,14.09,3H9.91c-0.26,0-0.52,0.11-0.7,0.29L8.5,4H6C5.45,4,5,4.45,5,5s0.45,1,1,1h12 c0.55,0,1-0.45,1-1S18.55,4,18,4z"/></g>
+            </svg>
+          </button>
           <div>
-            <button disabled={temptext.toString().trim().length <= 0 || (temptext === text && (temp_tags.length === tags.length && tags.every((t) => temp_tags.includes(t))))} class="action-button" on:click={saveChanges}>s</button>
-            <button class="action-button" on:click={closePopup}>x</button>
+            {#if !(temptext.toString().trim().length <= 0 || (temptext === text && (temp_tags.length === tags.length && tags.every((t) => temp_tags.includes(t)))))}
+              <button class="action-button" on:click={saveChanges}>
+                <svg class="save-icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0V0z" fill="none"/>
+                  <path d="M17.59 3.59c-.38-.38-.89-.59-1.42-.59H5c-1.11 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V7.83c0-.53-.21-1.04-.59-1.41l-2.82-2.83zM12 19c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm1-10H7c-1.1 0-2-.9-2-2s.9-2 2-2h6c1.1 0 2 .9 2 2s-.9 2-2 2z"/>
+                </svg>
+              </button>
+            {/if}
+            <button class="action-button" on:click={closePopup}>
+              <svg class="exit-icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
+                <path d="M0 0h24v24H0V0z" fill="none"/><path d="M18.3 5.71c-.39-.39-1.02-.39-1.41 0L12 10.59 7.11 5.7c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41L10.59 12 5.7 16.89c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0L12 13.41l4.89 4.89c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4z"/>
+              </svg>
+            </button>
           </div>
         </div>
         <!-- svelte-ignore a11y-autofocus -->
-        <textarea autofocus bind:value={temptext}></textarea>
-        <div class="left-row">
-          <p class="thin-label">Remove Tags...</p>
-        </div>
+        <textarea style="width: -webkit-fill-available;" placeholder="Jots can't be blank..." autofocus bind:value={temptext}></textarea>
         {#each temp_tags as tag, i}
           <button on:click={() => {
             remove_tag(tag.title);
             search_tags();
-          }} class="tag">{tag.title}</button>
+          }} class="tag remove-tag">
+            <p>{tag.title}</p>
+            <svg class="remove-icon" xmlns="http://www.w3.org/2000/svg" height="16px" viewBox="0 0 24 24" width="16px" fill="#000000">
+              <path d="M0 0h24v24H0V0z" fill="none"/><path d="M18.3 5.71c-.39-.39-1.02-.39-1.41 0L12 10.59 7.11 5.7c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41L10.59 12 5.7 16.89c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0L12 13.41l4.89 4.89c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4z"/>
+            </svg>
+          </button>
         {:else}
           <p>No tags...</p>
         {/each}
-        <input style="width: 27em; margin-bottom: 1em;" inputmode="search" on:keyup={search_tags} placeholder="Search Tags..." bind:value={query}/>
+        <input style="width: -webkit-fill-available; margin-bottom: 0.5em; margin-top: 1em;" inputmode="search" on:keyup={search_tags} placeholder="Search Tags..." bind:value={query}/>
         {#await search_tags()}
           <p>Loading...</p>
         {:then}
-          <div class="left-row">
-            <p class="thin-label">Add Tags...</p>
-          </div>
          {#if !tags_list.map(tag => tag.title).includes(query)
           && !temp_tags.map(tag => tag.title).includes(query)
           && query.trim().length > 2}
@@ -136,7 +149,12 @@
             <button on:click={() => {
                 add_tag(tag);
                 search_tags();
-            }} class="tag">{tag.title}</button>
+            }} class="tag apply-tag">
+              <p>{tag.title}</p>
+              <svg class="apply-icon" xmlns="http://www.w3.org/2000/svg" height="16px" viewBox="0 0 24 24" width="16px" fill="#000000">
+                <path d="M0 0h24v24H0V0z" fill="none"/><path d="M18 13h-5v5c0 .55-.45 1-1 1s-1-.45-1-1v-5H6c-.55 0-1-.45-1-1s.45-1 1-1h5V6c0-.55.45-1 1-1s1 .45 1 1v5h5c.55 0 1 .45 1 1s-.45 1-1 1z"/>
+              </svg>
+            </button>
           {:else}
             <p>No tags found...</p>
           {/each}
@@ -148,3 +166,60 @@
     </div>
   {/if}
   
+  <style>
+    .action-button {
+      display: inline-block;
+      padding: 0em 0px;
+      border-radius: 25px;
+      background: none;
+      font-size: 20px;
+      border: none;
+      box-shadow: none;
+    }
+    button:hover .delete-icon{
+      fill: var(--negative-color);
+    }
+    .delete-icon {
+      fill: var(--foreground-font-color-secondary);
+    }
+    button:hover .exit-icon{
+      fill: var(--foreground-font-color);
+    }
+    .exit-icon {
+      fill: var(--foreground-font-color-secondary);
+    }
+    button:hover .save-icon{
+      fill: var(--primary-color);
+    }
+    .save-icon {
+      fill: var(--foreground-font-color-secondary);
+    }
+    
+    .remove-tag:hover {
+      color: var(--negative-color);
+      border-color: var(--negative-color);
+    }
+    .remove-tag:focus {
+      border-color: var(--negative-color);
+    }
+    .remove-icon {
+      fill: var(--foreground-font-color-secondary);
+    }
+    button:hover .remove-icon {
+      fill: var(--negative-color);
+    }
+
+    .apply-tag:hover {
+      color: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+    .apply-tag:focus {
+      border-color: var(--primary-color);
+    }
+    .apply-icon {
+      fill: var(--foreground-font-color-secondary);
+    }
+    button:hover .apply-icon {
+      fill: var(--primary-color);
+    }
+  </style>
