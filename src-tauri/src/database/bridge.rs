@@ -1,8 +1,7 @@
 use std::vec;
 
-use fuzzy_matcher::{skim::{SkimMatcherV2, SkimScoreConfig}, FuzzyMatcher, clangd::{self, ClangdMatcher}};
-use sqlx::database;
-use sublime_fuzzy::{ContinuousMatches, best_match};
+use fuzzy_matcher::{skim::{SkimMatcherV2}, FuzzyMatcher};
+use sublime_fuzzy::{best_match};
 use super::*;
 
 pub struct Bridge {
@@ -47,9 +46,22 @@ impl Bridge {
     }
     pub async fn remove_tag_from_jot(&mut self, tag_id: i64, jot_id: i64){
         delete_jot_tag(&mut self.conn, jot_id, tag_id).await.unwrap();
-        if fetch_jot_tag_for_tag(&mut self.conn, tag_id).await.unwrap().is_none() {
+        if fetch_jot_tags_for_tag(&mut self.conn, tag_id).await.unwrap().len() == 0 {
             delete_tag(&mut self.conn, tag_id).await.unwrap();
         }
+    }
+    pub async fn get_top_tags(&mut self) -> Vec<models::Tag> {
+        let mut tags = get_all_tags(&mut self.conn).await.unwrap();
+        let mut tag_counts = vec![];
+        
+        for tag in tags.iter() {
+            tag_counts.push((tag.id, fetch_jot_tags_for_tag(&mut self.conn, tag.id).await.unwrap().len()));
+        }
+        tag_counts.sort_by(|a, b| a.1.cmp(&b.1));
+        
+        tags.sort_by(|a, b| tag_counts.iter()
+            .position(|n| n.0 == a.id).cmp(&tag_counts.iter().position(|n| n.0 == b.id)));
+        tags
     }
     
     /* Searching */

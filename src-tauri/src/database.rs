@@ -237,6 +237,15 @@ pub async fn fetch_tag(conn: &mut SqliteConnection, title: &str) -> Result<Optio
     ).fetch_optional(conn).await;
     tag
 }
+pub async fn fetch_tag_by_id(conn: &mut SqliteConnection, id: i64) -> Result<Option<models::Tag>, sqlx::Error> {
+    let tag = sqlx::query_as!(models::Tag,
+        "
+        SELECT * FROM tags WHERE id = ?
+        ",
+        id
+    ).fetch_optional(conn).await;
+    tag
+}
 pub async fn fetch_jot(conn: &mut SqliteConnection, id: i64) -> Result<Option<models::Jot>, sqlx::Error> {
     let tag = sqlx::query_as!(models::Jot,
         "
@@ -246,12 +255,12 @@ pub async fn fetch_jot(conn: &mut SqliteConnection, id: i64) -> Result<Option<mo
     ).fetch_optional(conn).await;
     tag
 }
-pub async fn fetch_jot_tag_for_tag(conn: &mut SqliteConnection, tag_id: i64) -> Result<Option<models::JotTag>, sqlx::Error> {
+pub async fn fetch_jot_tags_for_tag(conn: &mut SqliteConnection, tag_id: i64) -> Result<Vec<models::JotTag>, sqlx::Error> {
     let jot_tag = sqlx::query_as!(models::JotTag,
         "
         SELECT * FROM jot_tags WHERE tag_id = ?
         ",
         tag_id
-    ).fetch_optional(conn).await;
+    ).fetch_all(conn).await;
     jot_tag
 }

@@ -34,6 +34,11 @@ async fn get_all_tags() -> Vec<database::models::Tag> {
     bridge.get_all_tags().await
 }
 #[tauri::command]
+async fn get_top_tags() -> Vec<database::models::Tag> {
+    let mut bridge = Bridge::new().await;
+    bridge.get_top_tags().await
+}
+#[tauri::command]
 async fn add_tag_to_jot(tag_id: i64, jot_id: i64){
     let mut bridge = Bridge::new().await;
     bridge.add_tag_to_jot(tag_id, jot_id).await;
@@ -66,7 +71,7 @@ async fn delete_jot(id: i64) {
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![search_jots,get_all_tags_for_jot,get_all_tags,add_tag_to_jot,add_new_tag_to_jot,remove_tag_from_jot,search_tags,update_jot_text,create_jot,delete_jot,get_jot])
+        .invoke_handler(tauri::generate_handler![search_jots,get_all_tags_for_jot,get_all_tags,get_top_tags,add_tag_to_jot,add_new_tag_to_jot,remove_tag_from_jot,search_tags,update_jot_text,create_jot,delete_jot,get_jot])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

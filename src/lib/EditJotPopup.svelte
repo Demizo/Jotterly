@@ -128,10 +128,8 @@
               <path d="M0 0h24v24H0V0z" fill="none"/><path d="M18.3 5.71c-.39-.39-1.02-.39-1.41 0L12 10.59 7.11 5.7c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41L10.59 12 5.7 16.89c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0L12 13.41l4.89 4.89c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4z"/>
             </svg>
           </button>
-        {:else}
-          <p>No tags...</p>
         {/each}
-        <input style="width: -webkit-fill-available; margin-bottom: 0.5em; margin-top: 1em;" inputmode="search" on:keyup={search_tags} placeholder="Search Tags..." bind:value={query}/>
+        <input style="width: -webkit-fill-available; margin-bottom: 0.5em; margin-top: 1em;" inputmode="search" on:keyup={search_tags} placeholder="Search or Create Tags..." bind:value={query}/>
         {#await search_tags()}
           <p>Loading...</p>
         {:then}
@@ -169,59 +167,5 @@
   {/if}
   
   <style>
-    .action-button {
-      display: inline-block;
-      padding: 0em 0px;
-      border-radius: 25px;
-      background: none;
-      font-size: 20px;
-      border: none;
-      box-shadow: none;
-    }
-    button:hover .delete-icon{
-      fill: var(--negative-color);
-    }
-    .delete-icon {
-      fill: var(--foreground-font-color-secondary);
-    }
-    button:hover .exit-icon{
-      fill: var(--foreground-font-color);
-    }
-    .exit-icon {
-      fill: var(--foreground-font-color-secondary);
-    }
-    button:hover .save-icon{
-      fill: var(--primary-color);
-    }
-    .save-icon {
-      fill: var(--foreground-font-color-secondary);
-    }
-    
-    .remove-tag:hover {
-      color: var(--negative-color);
-      border-color: var(--negative-color);
-    }
-    .remove-tag:focus {
-      border-color: var(--negative-color);
-    }
-    .remove-icon {
-      fill: var(--foreground-font-color-secondary);
-    }
-    button:hover .remove-icon {
-      fill: var(--negative-color);
-    }
-
-    .apply-tag:hover {
-      color: var(--primary-color);
-      border-color: var(--primary-color);
-    }
-    .apply-tag:focus {
-      border-color: var(--primary-color);
-    }
-    .apply-icon {
-      fill: var(--foreground-font-color-secondary);
-    }
-    button:hover .apply-icon {
-      fill: var(--primary-color);
-    }
+  
   </style>
