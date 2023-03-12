@@ -2,17 +2,19 @@
   import { invoke } from "@tauri-apps/api/tauri";
   import JotView from "$lib/JotView.svelte";
 
-  let query = "";
-  let jots = [{id: Number, text: String, img_path: String, time_create: String, time_modified: String }];
-  let active_tags = [];
-  let tags_list = [{id: Number, title: String, color: String, priority: Number, time_create: String, time_modified: String}];
+  let query: String = "";
+  let jots: {id: Number, text: String, img_path: String, time_create: String, time_modified: String }[] = [];
+  let active_tags: {id: Number, title: String, color: String, priority: Number, time_create: String, time_modified: String}[] = [];
+  let tags_list: {id: Number, title: String, color: String, priority: Number, time_create: String, time_modified: String}[] = [];
+
   async function search_jots() {
     if (query.trim().length > 2 || query.trim().length == 0 ) {
       tags_list = await invoke("get_top_tags");
       if(active_tags.length > 0) {
         tags_list = tags_list.filter(t => !active_tags.map(t => t.title).includes(t.title));
       }
-      jots = await invoke("search_jots", {query: query});
+      console.log(active_tags.map(t => t.id));
+      jots = await invoke("search_jots", {query: query, activeTags: active_tags.map(t => t.id)});
     }
     update_height();
   }
@@ -21,7 +23,7 @@
     new_jot_id = await invoke("create_jot", {text: query, img_path: undefined});
     await search_jots();
   }
-  function add_tag(tag){
+  function add_tag(tag: {id: Number, title: String, color: String, priority: Number, time_create: String, time_modified: String}){
       active_tags.push(tag);
       active_tags = [...active_tags];
   }

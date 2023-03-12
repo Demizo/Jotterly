@@ -8,9 +8,9 @@ use tauri_test::{database};
 use database::bridge::Bridge;
 
 #[tauri::command]
-async fn search_jots(query: String) -> Vec<database::models::Jot> {
+async fn search_jots(query: String, active_tags: Vec<i64>) -> Vec<database::models::Jot> {
     let mut bridge = Bridge::new().await;
-    bridge.sublime_search_jots(query.as_str()).await.unwrap()
+    bridge.sublime_search_jots(query.as_str(), active_tags).await.unwrap()
 }
 //TODO: this method is not being used
 #[tauri::command]

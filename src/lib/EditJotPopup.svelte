@@ -5,9 +5,9 @@
     
     export let visible = false;
     export let jotId: Number;
-    export let jot = {id: Number, text: String, img_path: String, time_create: String, time_modified: String };
-    export let search_jots;
-    export let tags = [{id: Number, title: String, color: String, priority: Number, time_create: String, time_modified: String}];
+    export let jot: {id: Number, text: String, img_path: String, time_create: String, time_modified: String };
+    export let search_jots: () => {};
+    export let tags: {id: Number, title: String, color: String, priority: Number, time_create: String, time_modified: String}[] = [];
     let temp_tags = tags.slice(0, tags.length);
     let query = "";
     let pending = false;
@@ -21,7 +21,7 @@
       visible = false;
       document.body.style.overflow = 'auto';
     }
-    function handleEscDown(event) {
+    function handleEscDown(event:  KeyboardEvent) {
       if (visible && event.key === 'Escape') {
         closePopup();
       }
@@ -40,7 +40,7 @@
       query = "";
       search_tags();
     }
-    function add_tag(tag){
+    function add_tag(tag: {id: Number, title: String, color: String, priority: Number, time_create: String, time_modified: String}){
         temp_tags.push(tag);
         temp_tags = [...temp_tags];
     }
@@ -67,7 +67,7 @@
         
         //create and add new tags
         for(let i = 0; i < new_tags.length; i++) {
-          let tag = await invoke("add_new_tag_to_jot", {title: new_tags[i].title, jotId: jotId}).catch(() => console.log("failed to add new tag")) as {id: NumberConstructor, title: StringConstructor, color: StringConstructor, priority: NumberConstructor, time_create: StringConstructor, time_modified: StringConstructor};
+          let tag = await invoke("add_new_tag_to_jot", {title: new_tags[i].title, jotId: jotId}).catch(() => console.log("failed to add new tag")) as {id: Number, title: String, color: String, priority: Number, time_create: String, time_modified: String};
           add_tag(tag);
         }
         

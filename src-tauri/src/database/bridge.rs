@@ -2,7 +2,7 @@ use std::vec;
 
 use fuzzy_matcher::{skim::{SkimMatcherV2}, FuzzyMatcher};
 use sublime_fuzzy::{best_match};
-use super::*;
+use super::{*, models::Jot};
 
 pub struct Bridge {
     conn: SqliteConnection,
@@ -53,14 +53,14 @@ impl Bridge {
     pub async fn get_top_tags(&mut self) -> Vec<models::Tag> {
         let mut tags = get_all_tags(&mut self.conn).await.unwrap();
         let mut tag_counts = vec![];
-        
+
         for tag in tags.iter() {
             tag_counts.push((tag.id, fetch_jot_tags_for_tag(&mut self.conn, tag.id).await.unwrap().len()));
         }
         tag_counts.sort_by(|a, b| a.1.cmp(&b.1));
         
         tags.sort_by(|a, b| tag_counts.iter()
-            .position(|n| n.0 == a.id).cmp(&tag_counts.iter().position(|n| n.0 == b.id)));
+            .position(|n| n.0 == b.id).cmp(&tag_counts.iter().position(|n| n.0 == a.id)));
         tags
     }
     
@@ -115,9 +115,24 @@ impl Bridge {
         Ok(filtered_jots.iter().map(|j| j.1.to_owned()).collect())
     }
     
-    pub async fn sublime_search_jots(&mut self, query: &str) -> Result<Vec<models::Jot>, sqlx::Error> {
-        let jots = get_all_jots(&mut self.conn).await?;
-        //let matcher = SkimMatcherV2::default();
+    pub async fn sublime_search_jots(&mut self, query: &str, active_tags: Vec<i64>) -> Result<Vec<models::Jot>, sqlx::Error> {
+        let mut jots: Vec<Jot> = vec![];
+
+        //filter by tags
+        if active_tags.len() > 0 {
+            for id in active_tags.iter() {
+                let matching_jots = get_jots_for_tag(&mut self.conn, id.to_owned()).await.unwrap();
+                for jot in matching_jots {
+                    let jot_ids: Vec<i64> = jots.iter().map(|j| j.id).clone().collect();
+                    if !jot_ids.contains(&jot.id) {
+                        jots.push(jot);
+                    }
+                }
+            }
+            
+        } else {
+            jots = get_all_jots(&mut self.conn).await?;
+        }
         
         let tags: Vec<String> = get_all_tags(&mut self.conn).await.unwrap().iter().map(|t| t.title.to_owned()).collect();
         let filtered_tags = fuzzy_search(query, tags);
@@ -140,6 +155,9 @@ impl Bridge {
                 if filtered_tag_titles.contains(&tag.title) {
                     score += 1;
                 }
+                if active_tags.contains(&tag.id) {
+                    score += 1;
+                }
             }
 
             //Add scored jot to filtered list
@@ -149,7 +167,7 @@ impl Bridge {
         }
         
         //Sort by score
-        filtered_jots.sort_by(|a, b| a.0.cmp(&b.0));
+        filtered_jots.sort_by(|a, b| b.0.cmp(&a.0));
         Ok(filtered_jots.iter().map(|j| j.1.to_owned()).collect())
     }
 

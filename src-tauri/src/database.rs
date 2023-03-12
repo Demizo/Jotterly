@@ -219,8 +219,8 @@ pub async fn get_jots_for_tag(conn: &mut SqliteConnection, id: i64) -> Result<Ve
         "
         SELECT j.id, j.text, j.img_path, j.time_create, j.time_modified
         FROM jot_tags jt
-        INNER JOIN jots j ON j.id = jt.tag_id
-        WHERE jt.jot_id = ?
+        INNER JOIN jots j ON j.id = jt.jot_id
+        WHERE jt.tag_id = ?
         ",
         id
     ).fetch_all(conn).await;
