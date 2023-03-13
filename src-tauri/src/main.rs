@@ -4,13 +4,17 @@
 )]
 
 extern crate tauri_test;
-use tauri_test::{database};
+use tauri_test::{database::{self, get_all_jots}};
 use database::bridge::Bridge;
 
 #[tauri::command]
 async fn search_jots(query: String, active_tags: Vec<i64>) -> Vec<database::models::Jot> {
     let mut bridge = Bridge::new().await;
-    bridge.sublime_search_jots(query.as_str(), active_tags).await.unwrap()
+    if query.trim().len() == 0 && active_tags.len() == 0 {
+        bridge.get_recent_jots(5).await
+    } else {
+        bridge.sublime_search_jots(query.as_str(), active_tags).await.unwrap()
+    }
 }
 //TODO: this method is not being used
 #[tauri::command]

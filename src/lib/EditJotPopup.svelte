@@ -85,6 +85,7 @@
     }
     async function delete_jot() {
       await invoke("delete_jot", {id: jot.id});
+      document.body.style.overflow = 'auto';
       search_jots();
     }
     document.addEventListener('keydown', handleEscDown);
@@ -92,9 +93,9 @@
   
   {#if visible}
     <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <div class="popup" tabindex="-1" on:click={closePopup}>
+    <div class="popup" tabindex="-1" on:mousedown={closePopup}>
       <!-- svelte-ignore a11y-click-events-have-key-events -->
-      <div class="popup-content" use:focusTrap on:click|stopPropagation>
+      <div class="popup-content" use:focusTrap on:mousedown|stopPropagation>
         <div class="action-buttons">
           <button class="action-button" on:click={delete_jot}>
             <svg class="delete-icon" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="26px" viewBox="0 0 24 24" width="26px" fill="#000000">

@@ -59,18 +59,18 @@
 }
 .tag {
   display: inline-flex;
-  padding: 1px 6px;
+  padding: 0px 7px;
   height: 25px;
   border-radius: 50px;
   border-width: var(--highlight-thickness);
-  background-color: var(--backround-color);
+  background-color: var(--backround-color-dark);
   color: var(--foreground-font-color);
   font-size: 14px;
   font-weight: bold;
   text-align: justify;
   vertical-align: middle;
   align-items: center;
-  margin-right: 10px;
+  margin-right: 8px;
   margin-top: 10px;
   cursor: pointer;
   min-width: 3em;
@@ -109,18 +109,6 @@
   transform: scale(1.02);
   transition: transform 0.2s ease-in-out;
   transition: border-color 0.25s;
-}
-.add-tag {    
-  display: inline-block;
-  padding: 0px 6px;
-  border-radius: 50px;
-  background-color: var(--backround-color);
-  color: var(--foreground-font-color-secondary);
-  font-size: 20px;
-  font-weight: bold;
-  text-align: center;
-  margin-top: 10px;
-  cursor: pointer;
 }
 .action-button {
   top: 0em;

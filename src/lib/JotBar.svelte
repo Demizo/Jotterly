@@ -8,14 +8,12 @@
   let tags_list: {id: Number, title: String, color: String, priority: Number, time_create: String, time_modified: String}[] = [];
 
   async function search_jots() {
-    if (query.trim().length > 2 || query.trim().length == 0 ) {
-      tags_list = await invoke("get_top_tags");
-      if(active_tags.length > 0) {
-        tags_list = tags_list.filter(t => !active_tags.map(t => t.title).includes(t.title));
-      }
-      console.log(active_tags.map(t => t.id));
-      jots = await invoke("search_jots", {query: query, activeTags: active_tags.map(t => t.id)});
+    tags_list = await invoke("get_top_tags");
+    if(active_tags.length > 0) {
+      tags_list = tags_list.filter(t => !active_tags.map(t => t.title).includes(t.title));
     }
+    console.log(active_tags.map(t => t.id));
+    jots = await invoke("search_jots", {query: query, activeTags: active_tags.map(t => t.id)});
     update_height();
   }
 
@@ -71,7 +69,6 @@
           </button>
         {/if}
       </div>
-
       <div class="tags-list">
         {#each tags_list as tag, i}
           <button tabindex="-1" class="tag apply-tag" on:click={() => {
@@ -94,6 +91,9 @@
 {:then}
   <!-- The data is ready, so render it -->
   <div id="list" class="list" style="margin-top: {header_height}px;">
+    {#if query.trim().length < 1}
+  <p class="thin-label">Recent Jots</p>
+  {/if}
   {#each jots as jot (jot.id)}
       <JotView search_jots={search_jots} jot={jot} bind:new_jot_id={new_jot_id}/>
   {:else}
@@ -113,15 +113,16 @@
     top: 0;
     left: 0;
     right: 0;
-    min-height: 11em;
     padding: 10px;
-    background: linear-gradient(to top, var(--backround-color-trans) 0%, var(--backround-color) 20%);
+    padding-bottom: 2em;
+    background: linear-gradient(to top, var(--backround-color-trans) 0%, var(--backround-color) 10%);
     /* box-sizing: border-box; */
   }
   .search-box {
     min-height: 1em;
     height: 2.5em;
-    margin-bottom: -1em;
+    margin-bottom: -0.5em;
+    margin-top: 0.75em;
   }
   .tags-list {
     text-align: left;
@@ -155,7 +156,7 @@
   }
   .new-jot-button {
     position: absolute;
-    bottom: -0.75em;
+    bottom: -0.25em;
     right: -0.75em;
     border: none;
     background: none;

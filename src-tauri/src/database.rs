@@ -193,6 +193,17 @@ pub async fn get_all_jots(conn: &mut SqliteConnection) -> Result<Vec<models::Jot
     ).fetch_all(conn).await;
     jots
 }
+pub async fn get_recent_jots(conn: &mut SqliteConnection, count: i64) -> Result<Vec<models::Jot>, sqlx::Error> {
+    let jots = sqlx::query_as!(models::Jot,
+        "
+        SELECT id, text, img_path, time_create, time_modified
+        FROM jots ORDER BY id DESC
+        LIMIT ?
+        ",
+        count
+    ).fetch_all(conn).await;
+    jots
+}
 pub async fn get_all_tags(conn: &mut SqliteConnection) -> Result<Vec<models::Tag>, sqlx::Error> {
     let tags = sqlx::query_as!(models::Tag,
         "

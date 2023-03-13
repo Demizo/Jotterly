@@ -39,6 +39,9 @@ impl Bridge {
     pub async fn get_all_tags(&mut self) -> Vec<models::Tag> {
         get_all_tags(&mut self.conn).await.unwrap()
     }
+    pub async fn get_recent_jots(&mut self, count: i64) -> Vec<models::Jot> {
+        get_recent_jots(&mut self.conn, count).await.unwrap()
+    }
     pub async fn add_tag_to_jot(&mut self, tag_id: i64, jot_id: i64){
         insert_jot_tag(&mut self.conn, jot_id, tag_id).await.unwrap();
     }
@@ -120,7 +123,7 @@ impl Bridge {
     
     pub async fn sublime_search_jots(&mut self, query: &str, active_tags: Vec<i64>) -> Result<Vec<models::Jot>, sqlx::Error> {
         let mut jots: Vec<Jot> = vec![];
-
+        
         //filter by tags
         if active_tags.len() > 0 {
             for id in active_tags.iter() {
