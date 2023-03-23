@@ -92,6 +92,17 @@ async fn get_settings() -> String{
 async fn set_setting(key: String, val: String){
     settings::set_setting(key, val).unwrap();
 }
+#[tauri::command]
+async fn open_link(url: String) {
+    open::that(url).unwrap();
+}
+#[tauri::command]
+async fn open_themes_folder() {
+    let mut path = dirs::config_dir().expect("could not get config dir");
+    path.push("jotterly");
+    path.push("themes");
+    open::that(path).unwrap();
+}
 fn init(app: &mut tauri::App) {
     settings::create_default_settings(app).unwrap();
     theme::create_default_themes(app).unwrap();
@@ -110,7 +121,7 @@ fn main() {
         })
         .invoke_handler(tauri::generate_handler![search_jots,get_all_tags_for_jot,get_all_tags,get_top_tags,add_tag_to_jot,add_new_tag_to_jot,remove_tag_from_jot,search_tags,update_jot_text,create_jot,delete_jot,get_jot,
             fetch_all_themes,get_theme,
-            get_settings,set_setting])
+            get_settings,set_setting,open_link,open_themes_folder])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

@@ -43,20 +43,20 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: var(--backround-color-dark);
+    background-color: var(--background-color-dark);
     border-radius: 10px;
     padding: 0.5rem;
   }
   
   .dropdown-header:hover {
-    background-color: var(--backround-color-dark);
+    background-color: var(--background-color-dark);
     border: var(--highlight-thickness) solid var(--primary-color);
   }
   
   .icon {
     width: 1rem;
     height: 1rem;
-    fill: var(--foreground-font-color);
+    fill: var(--font-color);
     transition: transform 0.3s;
   }
 
@@ -69,8 +69,8 @@
     top: 100%;
     left: 0;
     right: 0;
-    background-color: var(--backround-color-dark);
-    border: var(--highlight-thickness) solid var(--backround-color-dark);
+    background-color: var(--background-color-dark);
+    border: var(--highlight-thickness) solid var(--background-color-dark);
     border-top: none;
     border-radius: 10px;
     overflow: hidden;

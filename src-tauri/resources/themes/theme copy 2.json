@@ -1,12 +1,10 @@
 {
     "primary_color": "#000000",
-    "secondary_color": "#0bc798",
     "negative_color": "#f33b3b",
-    "backround_color": "#383838",
-    "backround_color_dark": "#272727",
-    "backround_color_trans": "#38383800",
-    "backround_highlight": "#464444",
-    "foreground_font_color": "#ffffff",
-    "foreground_font_color_secondary": "#757474",
+    "background_color": "#383838",
+    "background_color_dark": "#272727",
+    "background_highlight": "#464444",
+    "font_color": "#ffffff",
+    "font_color_secondary": "#757474",
     "highlight_thickness": "4px"
   }

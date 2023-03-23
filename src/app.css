@@ -1,21 +1,21 @@
 :root {
   --primary-color: #0bc734;
-  --secondary-color: #0bc798;
   --negative-color: #f33b3b;
-  --backround-color: #383838;
-  --backround-color-dark: #272727;
-  --backround-color-trans: #38383800;
-  --backround-highlight: #464444;
-  --foreground-font-color: #ffffff;
-  --foreground-font-color-secondary: #757474;
+  --background-color: #383838;
+  --background-color-dark: #272727;
+  --background-color-trans: #38383800;
+  --background-highlight: #464444;
+  --font-color: #ffffff;
+  --font-color-secondary: #757474;
   --highlight-thickness: 3px;
+  --font-size: 16px;
   font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
-  font-size: 16px;
+  font-size: var(--font-size);
   line-height: 24px;
   font-weight: 400;
   
-  color: var(--foreground-font-color);
-  background-color: var(--backround-color);
+  color: var(--font-color);
+  background-color: var(--background-color);
   
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -54,7 +54,7 @@
 }
 .thin-label {
   font-weight: bold;
-  color: var(--foreground-font-color-secondary);
+  color: var(--font-color-secondary);
   margin: 0em;
 }
 .tag {
@@ -63,9 +63,9 @@
   height: 25px;
   border-radius: 50px;
   border-width: var(--highlight-thickness);
-  background-color: var(--backround-color-dark);
-  color: var(--foreground-font-color);
-  font-size: 14px;
+  background-color: var(--background-color-dark);
+  color: var(--font-color);
+  font-size: calc(var(--font-size) - 2px);
   font-weight: bold;
   text-align: justify;
   vertical-align: middle;
@@ -82,9 +82,9 @@
   top: 2.5px;
 }
 .box {
-  background-color: var(--backround-highlight);
+  background-color: var(--background-highlight);
   border-radius: 10px;
-  border: var(--highlight-thickness) solid var(--backround-highlight);
+  border: var(--highlight-thickness) solid var(--background-highlight);
   padding: 5px;
   margin-top: 1em;
   width: 30em; 
@@ -111,25 +111,11 @@
   transition: border-color 0.25s;
 }
 .action-button {
-  top: 0em;
-  right: 0em;
-  display: inline-block;
-  padding: 0em 4px;
-  border-radius: 25px;
-  background-color: var(--backround-color);
-  color: var(--foreground-font-color-secondary);
-  font-size: 20px;
-  font-weight: bold;
-  text-align: center;
-  cursor: pointer;
-  justify-content: center;
-}
-.action-button {
   display: inline-block;
   padding: 0em 0px;
   border-radius: 25px;
   background: none;
-  font-size: 20px;
+  font-size: calc(var(--font-size) + 4px);
   border: none;
   box-shadow: none;
 }
@@ -140,16 +126,16 @@ button:focus .delete-icon{
   fill: var(--negative-color);
 }
 .delete-icon {
-  fill: var(--foreground-font-color-secondary);
+  fill: var(--font-color-secondary);
 }
 button:hover .exit-icon{
-  fill: var(--foreground-font-color);
+  fill: var(--font-color);
 }
 button:focus .exit-icon{
-  fill: var(--foreground-font-color);
+  fill: var(--font-color);
 }
 .exit-icon {
-  fill: var(--foreground-font-color-secondary);
+  fill: var(--font-color-secondary);
 }
 button:hover .save-icon{
   fill: var(--primary-color);
@@ -158,7 +144,7 @@ button:focus .save-icon{
   fill: var(--primary-color);
 }
 .save-icon {
-  fill: var(--foreground-font-color-secondary);
+  fill: var(--font-color-secondary);
 }
 
 .remove-tag:hover {
@@ -170,7 +156,7 @@ button:focus .save-icon{
   border-color: var(--negative-color);
 }
 .remove-icon {
-  fill: var(--foreground-font-color-secondary);
+  fill: var(--font-color-secondary);
 }
 button:hover .remove-icon {
   fill: var(--negative-color);
@@ -188,7 +174,7 @@ button:focus .remove-icon {
   border-color: var(--primary-color);
 }
 .apply-icon {
-  fill: var(--foreground-font-color-secondary);
+  fill: var(--font-color-secondary);
 }
 button:hover .apply-icon {
   fill: var(--primary-color);
@@ -210,7 +196,7 @@ button:focus .apply-icon {
   justify-content: space-between;
 }
 .date-label {
-  color: var(--foreground-font-color-secondary);
+  color: var(--font-color-secondary);
   text-align: left;
   margin: 0em;
   font-weight: bold;
@@ -228,9 +214,9 @@ button:focus .apply-icon {
   align-items: center;
 }
 .popup-content {
-  background-color: var(--backround-highlight);
+  background-color: var(--background-highlight);
   border-radius: 10px;
-  border: var(--highlight-thickness) solid var(--backround-highlight);
+  border: var(--highlight-thickness) solid var(--background-highlight);
   padding: 5px;
   margin-top: 0em;
   width: 30em; 
@@ -241,7 +227,7 @@ button:focus .apply-icon {
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
   position: relative;
   overflow-y: scroll;
-  scrollbar-color: var(--foreground-font-color-secondary) var(--foreground-font-color-secondary);
+  scrollbar-color: var(--font-color-secondary) var(--font-color-secondary);
 }
 .action-buttons {
   display: flex;
@@ -249,7 +235,7 @@ button:focus .apply-icon {
 }
 a {
   font-weight: 500;
-  color: #646cff;
+  color: var(--font-color-secondary);
   text-decoration: inherit;
 }
 p {
@@ -257,7 +243,7 @@ p {
   white-space: pre-wrap;
 }
 a:hover {
-  color: #535bf2;
+  color: var(--primary-color);
 }
 
 h1 {
@@ -269,11 +255,11 @@ button {
   border-radius: 10px;
   border: var(--highlight-thickness) solid transparent;
   padding: 0.6em 1.2em;
-  font-size: 1em;
+  font-size: var(--font-size);
   font-weight: 500;
   font-family: inherit;
-  color: var(--foreground-font-color);
-  background-color: var(--backround-color-dark);
+  color: var(--font-color);
+  background-color: var(--background-color-dark);
   transition: border-color 0.25s;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
 }
@@ -291,19 +277,19 @@ button:focus {
   border-color: var(--primary-color);
 }
 button:disabled {
-  background-color: var(--backround-color);
-  border-color: var(--backround-color);
-  color: var(--backround-highlight);
+  background-color: var(--background-color);
+  border-color: var(--background-color);
+  color: var(--background-highlight);
 }
 textarea {
   border-radius: 10px;
-  background-color: var(--backround-color-dark);
+  background-color: var(--background-color-dark);
   width: 28.7em;
   min-height: 7em;
-  font-size: 16px;
-  color: var(--foreground-font-color);
+  font-size: var(--font-size);
+  color: var(--font-color);
   border-width: var(--highlight-thickness);
-  border-color: var(--backround-color-dark);
+  border-color: var(--background-color-dark);
   padding: 10px;
   resize: none;
   overflow-y: scroll;
@@ -314,7 +300,7 @@ textarea:focus-visible {
   border-color: var(--primary-color);
 }
 ::placeholder {
-  color: var(--foreground-font-color-secondary);
+  color: var(--font-color-secondary);
   font-weight: bold;
 }
 input,
@@ -326,17 +312,17 @@ input {
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    color: var(--foreground-font-color);
-    background-color: var(--backround-color);
+    color: var(--font-color);
+    background-color: var(--background-color);
   }
 
   a:hover {
-    color: #24c8db;
+    color: var(--primary-color);
   }
-
+  
   input,
   button {
-    color: var(--foreground-font-color);
-    background-color: var(--backround-color-dark);
+    color: var(--font-color);
+    background-color: var(--background-color-dark);
   }
 }

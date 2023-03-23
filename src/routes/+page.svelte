@@ -9,14 +9,13 @@
       console.log(theme);
       let theme_data = JSON.parse(await invoke("get_theme", {theme: theme}));
       if(theme_data.primary_color != undefined) root.style.setProperty('--primary-color', theme_data.primary_color);
-      if(theme_data.secondary_color != undefined) root.style.setProperty('--secondary-color', theme_data.secondary_color);
       if(theme_data.negative_color != undefined) root.style.setProperty('--negative-color', theme_data.negative_color);
-      if(theme_data.backround_color != undefined) root.style.setProperty('--backround-color', theme_data.backround_color);
-      if(theme_data.backround_color_dark != undefined) root.style.setProperty('--backround-color-dark', theme_data.backround_color_dark);
-      if(theme_data.backround_color_trans != undefined) root.style.setProperty('--backround-color-trans', theme_data.backround_color_trans);
-      if(theme_data.backround_highlight != undefined) root.style.setProperty('--backround-highlight', theme_data.backround_highlight);
-      if(theme_data.foreground_font_color != undefined) root.style.setProperty('--foreground-font-color', theme_data.foreground_font_color);
-      if(theme_data.foreground_font_color_secondary != undefined) root.style.setProperty('--foreground-font-color-secondary', theme_data.foreground_font_color_secondary);
+      if(theme_data.background_color != undefined) root.style.setProperty('--background-color', theme_data.background_color);
+      if(theme_data.background_color_dark != undefined) root.style.setProperty('--background-color-dark', theme_data.background_color_dark);
+      if(theme_data.background_color_trans != undefined) root.style.setProperty('--background-color-trans', theme_data.background_color + "00");
+      if(theme_data.background_highlight != undefined) root.style.setProperty('--background-highlight', theme_data.background_highlight);
+      if(theme_data.font_color != undefined) root.style.setProperty('--font-color', theme_data.font_color);
+      if(theme_data.font_color_secondary != undefined) root.style.setProperty('--font-color-secondary', theme_data.font_color_secondary);
       if(theme_data.highlight_thickness != undefined) root.style.setProperty('--highlight-thickness', theme_data.highlight_thickness);
   }
 

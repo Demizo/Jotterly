@@ -2013,6 +2013,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "open"
+version = "4.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "075c5203b3a2b698bc72c6c10b1f6263182135751d5013ea66e8a4b3d0562a43"
+dependencies = [
+ "pathdiff",
+]
+
+[[package]]
 name = "openssl"
 version = "0.10.45"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3187,7 +3196,7 @@ dependencies = [
  "ignore",
  "objc",
  "once_cell",
- "open",
+ "open 3.2.0",
  "percent-encoding",
  "rand 0.8.5",
  "raw-window-handle",
@@ -3318,6 +3327,7 @@ dependencies = [
  "dirs",
  "dotenvy",
  "fuzzy-matcher",
+ "open 4.0.1",
  "serde",
  "serde_json",
  "sqlx",
