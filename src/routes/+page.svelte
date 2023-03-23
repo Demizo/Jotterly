@@ -1,6 +1,5 @@
 <script land="ts">
   import JotBar from "$lib/JotBar.svelte";
-  import JotView from "$lib/JotView.svelte";
   import { invoke } from "@tauri-apps/api/tauri";
   
   const root = document.documentElement;
