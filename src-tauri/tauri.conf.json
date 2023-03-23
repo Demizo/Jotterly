@@ -16,6 +16,13 @@
       "shell": {
         "all": false,
         "open": true
+      },
+      "fs": {
+        "all": true,
+        "scope": ["$RESOURCE/resources/*"]
+      },
+      "path": {
+        "all": true
       }
     },
     "bundle": {
@@ -42,7 +49,7 @@
         "providerShortName": null,
         "signingIdentity": null
       },
-      "resources": [],
+      "resources": ["resources/*"],
       "shortDescription": "",
       "targets": "all",
       "windows": {

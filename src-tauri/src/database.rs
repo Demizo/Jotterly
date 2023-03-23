@@ -1,7 +1,6 @@
-use std::{env, fs::File, path::Path};
+use std::{path::{PathBuf}};
 
-use dotenvy::dotenv;
-use sqlx::{SqliteConnection, Connection, sqlite::{SqliteQueryResult, SqliteConnectOptions}, migrate::Migrator};
+use sqlx::{SqliteConnection, Connection, sqlite::{SqliteQueryResult}};
 
 pub mod models;
 pub mod bridge;
@@ -14,37 +13,45 @@ async fn create_database() -> Result<SqliteConnection, sqlx::Error> {
     
     path.push("jotterly.db");
     
+    let new_database = !PathBuf::from(&path).exists();
     // Create a new database or connect to an existing one
     let mut conn = SqliteConnection::connect(&format!("sqlite://{}?mode=rwc", path.to_str().unwrap())).await?;
     
-    //TODO: This should be done with migrations but I couldn't get the liftimes to work with Tauri commands
-    sqlx::query!(
-        "
-        CREATE TABLE IF NOT EXISTS jots (
-            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-            text TEXT NOT NULL,
-            img_path TEXT,
-            time_create DATETIME NOT NULL DEFAULT (DATETIME('now')),
-            time_modified DATETIME NOT NULL DEFAULT (DATETIME('now'))
-        );
-        CREATE TABLE IF NOT EXISTS tags (
-            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-            title TEXT UNIQUE NOT NULL,
-            color TEXT,
-            priority INTEGER NOT NULL DEFAULT 0,
-            time_create DATETIME NOT NULL DEFAULT (DATETIME('now')),
-            time_modified DATETIME NOT NULL DEFAULT (DATETIME('now'))
-        );
-        CREATE TABLE IF NOT EXISTS jot_tags (
-            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-            jot_id INTEGER NOT NULL,
-            tag_id INTEGER NOT NULL,
-            FOREIGN KEY (jot_id) REFERENCES jots (id)
-            FOREIGN KEY (tag_id) REFERENCES tags (id)
-        );
-        "
-    ).execute(&mut conn).await.unwrap();
+    //First launch data
+    if new_database {
+        //TODO: This should be done with migrations but I couldn't get the liftimes to work with Tauri commands
+        sqlx::query!(
+            "
+            CREATE TABLE IF NOT EXISTS jots (
+                id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                text TEXT NOT NULL,
+                img_path TEXT,
+                time_create DATETIME NOT NULL DEFAULT (DATETIME('now')),
+                time_modified DATETIME NOT NULL DEFAULT (DATETIME('now'))
+            );
+            CREATE TABLE IF NOT EXISTS tags (
+                id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                title TEXT UNIQUE NOT NULL,
+                color TEXT,
+                priority INTEGER NOT NULL DEFAULT 0,
+                time_create DATETIME NOT NULL DEFAULT (DATETIME('now')),
+                time_modified DATETIME NOT NULL DEFAULT (DATETIME('now'))
+            );
+            CREATE TABLE IF NOT EXISTS jot_tags (
+                id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                jot_id INTEGER NOT NULL,
+                tag_id INTEGER NOT NULL,
+                FOREIGN KEY (jot_id) REFERENCES jots (id)
+                FOREIGN KEY (tag_id) REFERENCES tags (id)
+            );
+            "
+        ).execute(&mut conn).await.unwrap();
 
+        //Setup first launch jots and tags
+        let welcome_jot = insert_jot(&mut conn, "Welcome to **Jotterly!**", Option::None).await.unwrap();
+        let welcome_tag = insert_tag(&mut conn, "Welcome", Option::None).await.unwrap();
+        insert_jot_tag(&mut conn, welcome_jot.last_insert_rowid(), welcome_tag.last_insert_rowid()).await.unwrap();
+    }
     Ok(conn)
 }
 

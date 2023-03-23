@@ -1,7 +1,6 @@
 <script lang="ts">
     import { invoke } from "@tauri-apps/api/tauri";
     import { focusTrap } from 'svelte-focus-trap';
-    import { onMount } from 'svelte';
     
     export let visible = false;
     export let jotId: Number;

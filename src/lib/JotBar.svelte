@@ -1,7 +1,13 @@
 <script lang="ts">
   import { invoke } from "@tauri-apps/api/tauri";
   import JotView from "$lib/JotView.svelte";
+  import SettingsPopup from "$lib/SettingsPopup.svelte";
 
+  let showSettings = false;
+  function openSettings() {
+    showSettings=true;
+    document.body.style.overflow = 'hidden';
+  }
   let query: String = "";
   let jots: {id: Number, text: String, img_path: String, time_create: String, time_modified: String }[] = [];
   let active_tags: {id: Number, title: String, color: String, priority: Number, time_create: String, time_modified: String}[] = [];
@@ -36,10 +42,13 @@
   }
 </script>
 
-
-
+<SettingsPopup bind:visible={showSettings}></SettingsPopup>
 <div id="header" class="header" style="z-index: 100;">
   <h1>Jotterly</h1>
+  <button tabindex="-1" class="settings-button" on:click={openSettings}>
+    <svg class="settings-icon" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="32px" viewBox="0 0 24 24" width="32px" fill="#000000">
+      <rect fill="none" height="24" width="24"/><path d="M19.5,12c0-0.23-0.01-0.45-0.03-0.68l1.86-1.41c0.4-0.3,0.51-0.86,0.26-1.3l-1.87-3.23c-0.25-0.44-0.79-0.62-1.25-0.42 l-2.15,0.91c-0.37-0.26-0.76-0.49-1.17-0.68l-0.29-2.31C14.8,2.38,14.37,2,13.87,2h-3.73C9.63,2,9.2,2.38,9.14,2.88L8.85,5.19 c-0.41,0.19-0.8,0.42-1.17,0.68L5.53,4.96c-0.46-0.2-1-0.02-1.25,0.42L2.41,8.62c-0.25,0.44-0.14,0.99,0.26,1.3l1.86,1.41 C4.51,11.55,4.5,11.77,4.5,12s0.01,0.45,0.03,0.68l-1.86,1.41c-0.4,0.3-0.51,0.86-0.26,1.3l1.87,3.23c0.25,0.44,0.79,0.62,1.25,0.42 l2.15-0.91c0.37,0.26,0.76,0.49,1.17,0.68l0.29,2.31C9.2,21.62,9.63,22,10.13,22h3.73c0.5,0,0.93-0.38,0.99-0.88l0.29-2.31 c0.41-0.19,0.8-0.42,1.17-0.68l2.15,0.91c0.46,0.2,1,0.02,1.25-0.42l1.87-3.23c0.25-0.44,0.14-0.99-0.26-1.3l-1.86-1.41 C19.49,12.45,19.5,12.23,19.5,12z M12.04,15.5c-1.93,0-3.5-1.57-3.5-3.5s1.57-3.5,3.5-3.5s3.5,1.57,3.5,3.5S13.97,15.5,12.04,15.5z"/>
+  </button>
   <div class="row">
      <div>
       {#if active_tags.length > 0}
@@ -91,8 +100,8 @@
 {:then}
   <!-- The data is ready, so render it -->
   <div id="list" class="list" style="margin-top: {header_height}px;">
-    {#if query.trim().length < 1}
-  <p class="thin-label">Recent Jots</p>
+  {#if query.trim().length < 1 && jots.length > 0}
+    <p class="thin-label">Recent Jots</p>
   {/if}
   {#each jots as jot (jot.id)}
       <JotView search_jots={search_jots} jot={jot} bind:new_jot_id={new_jot_id}/>
@@ -172,6 +181,28 @@
     transition: fill 0.25s;
   }
   button:focus .new-jot-icon{
+    fill: var(--primary-color);
+    transition: fill 0.25s;
+  }
+  .settings-button {
+    position: absolute;
+    top: 1em;
+    right: 1em;
+    border: none;
+    background: none;
+    box-shadow: none;
+    text-align: justify;
+    padding: 0em;
+    margin: 0em;
+  }
+  .settings-icon {
+    fill: var(--foreground-font-color-secondary);
+  }
+  button:hover .settings-icon{
+    fill: var(--primary-color);
+    transition: fill 0.25s;
+  }
+  button:focus .settings-icon{
     fill: var(--primary-color);
     transition: fill 0.25s;
   }

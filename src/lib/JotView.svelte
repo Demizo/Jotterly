@@ -2,7 +2,6 @@
   import { invoke } from "@tauri-apps/api/tauri";
   import { marked } from 'marked';
   import EditJotPopup from './EditJotPopup.svelte';
-  import { focusTrap } from 'svelte-focus-trap';
   
   let showJotPopup = false;
   export let search_jots: () => {};

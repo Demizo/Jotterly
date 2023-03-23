@@ -2,10 +2,12 @@
     all(not(debug_assertions), target_os = "windows"),
     windows_subsystem = "windows"
 )]
-
+use tauri::Manager;
 extern crate tauri_test;
-use tauri_test::{database::{self, get_all_jots}};
+use tauri_test::{database::{self}};
 use database::bridge::Bridge;
+pub mod theme;
+pub mod settings;
 
 #[tauri::command]
 async fn search_jots(query: String, active_tags: Vec<i64>) -> Vec<database::models::Jot> {
@@ -72,10 +74,43 @@ async fn delete_jot(id: i64) {
     let mut bridge = Bridge::new().await;
     bridge.delete_jot(id).await;
 }
-
+//Themes
+#[tauri::command]
+async fn fetch_all_themes() -> Vec<String>{
+    theme::fetch_all_themes()
+}
+#[tauri::command]
+async fn get_theme(theme: String) -> String{
+    theme::get_theme(theme)
+}
+//Settings
+#[tauri::command]
+async fn get_settings() -> String{
+    settings::get_settings()
+}
+#[tauri::command]
+async fn set_setting(key: String, val: String){
+    settings::set_setting(key, val).unwrap();
+}
+fn init(app: &mut tauri::App) {
+    settings::create_default_settings(app).unwrap();
+    theme::create_default_themes(app).unwrap();
+}
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![search_jots,get_all_tags_for_jot,get_all_tags,get_top_tags,add_tag_to_jot,add_new_tag_to_jot,remove_tag_from_jot,search_tags,update_jot_text,create_jot,delete_jot,get_jot])
+        .setup(|app| {
+        let main_window = app.get_window("main").unwrap();
+        
+        init(app);
+        
+        tauri::async_runtime::spawn(async move {
+            main_window.show().unwrap();
+          });
+        Ok(())
+        })
+        .invoke_handler(tauri::generate_handler![search_jots,get_all_tags_for_jot,get_all_tags,get_top_tags,add_tag_to_jot,add_new_tag_to_jot,remove_tag_from_jot,search_tags,update_jot_text,create_jot,delete_jot,get_jot,
+            fetch_all_themes,get_theme,
+            get_settings,set_setting])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
