@@ -48,9 +48,25 @@ async fn create_database() -> Result<SqliteConnection, sqlx::Error> {
         ).execute(&mut conn).await.unwrap();
 
         //Setup first launch jots and tags
-        let welcome_jot = insert_jot(&mut conn, "Welcome to **Jotterly!**", Option::None).await.unwrap();
+        let tags_jot = insert_jot(&mut conn, "The top bar can be used to search through or create **Jots**.\nYou can **filter** your search with *tags*.\nClick on a **Jot** to add and remove *tags*.", Option::None).await.unwrap();
+
+        let edit_jot = insert_jot(&mut conn, "Click on a **Jot** to edit it!\n\nYou can use **Markdown** to *style* text!", Option::None).await.unwrap();
+        
+        let welcome_jot = insert_jot(&mut conn, "# Welcome to **Jotterly!**\nTraditional note taking apps are meant to store organized **monolithic** notes. When you just want to **jot** down a *quick* fact or idea, finding the write place to put the information can be challenging. Does it *belong* in an **existing** note? Does it deserve a *whole* **new** note?\n\n**Jotterly** streamlines jotting down facts and ideas without the hassle or clutter of managing **monolithic** notes...\n\nSimply **Jot** something down and search for it later!", Option::None).await.unwrap();
+        
         let welcome_tag = insert_tag(&mut conn, "Welcome", Option::None).await.unwrap();
+        let tutorial_tag = insert_tag(&mut conn, "Tutorial", Option::None).await.unwrap();
+        let tag_usage_tag = insert_tag(&mut conn, "Tag Usage", Option::None).await.unwrap();
+        
         insert_jot_tag(&mut conn, welcome_jot.last_insert_rowid(), welcome_tag.last_insert_rowid()).await.unwrap();
+
+        insert_jot_tag(&mut conn, edit_jot.last_insert_rowid(), welcome_tag.last_insert_rowid()).await.unwrap();
+        insert_jot_tag(&mut conn, edit_jot.last_insert_rowid(), tutorial_tag.last_insert_rowid()).await.unwrap();
+        
+        insert_jot_tag(&mut conn, tags_jot.last_insert_rowid(), welcome_tag.last_insert_rowid()).await.unwrap();
+        insert_jot_tag(&mut conn, tags_jot.last_insert_rowid(), tutorial_tag.last_insert_rowid()).await.unwrap();
+        insert_jot_tag(&mut conn, tags_jot.last_insert_rowid(), tag_usage_tag.last_insert_rowid()).await.unwrap();
+        
     }
     Ok(conn)
 }
