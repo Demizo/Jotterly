@@ -46,6 +46,7 @@
     background-color: var(--background-color-dark);
     border-radius: 10px;
     padding: 0.5rem;
+    width: 11em;
   }
   
   .dropdown-header:hover {

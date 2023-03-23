@@ -1,0 +1,10 @@
+{
+  "primary_color": "#c061cb",
+  "negative_color": "#ed333b",
+  "background_color": "#deddda",
+  "background_color_dark": "#c0bfbc",
+  "background_highlight": "#ffffff",
+  "font_color": "#000000",
+  "font_color_secondary": "#77767b",
+  "highlight_thickness": "3px"
+}

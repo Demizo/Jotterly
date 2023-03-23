@@ -21,9 +21,17 @@
     let selectedTheme = "";
     async function getThemes() {
       selectedTheme = JSON.parse(await invoke("get_settings")).theme;
-      themes = await invoke("fetch_all_themes");
+      themes.push("Dark");
+      themes.push("Light");
+      let otherThemes: string[] = await invoke("fetch_all_themes");
+      otherThemes.sort();
+      otherThemes = otherThemes.filter((t) => t !== "Dark" && t !== "Light");
+      for (const theme of otherThemes) {
+        themes.push(theme);
+      }
+        
     }
-
+    
     const root = document.documentElement;
     
     async function changeTheme(theme: string) {
@@ -37,7 +45,7 @@
       if(theme_data.negative_color != undefined) root.style.setProperty('--negative-color', theme_data.negative_color);
       if(theme_data.background_color != undefined) root.style.setProperty('--background-color', theme_data.background_color);
       if(theme_data.background_color_dark != undefined) root.style.setProperty('--background-color-dark', theme_data.background_color_dark);
-      if(theme_data.background_color_trans != undefined) root.style.setProperty('--background-color-trans', theme_data.background_color + "00");
+      if(theme_data.background_color != undefined) root.style.setProperty('--background-color-trans', theme_data.background_color + "00");
       if(theme_data.background_highlight != undefined) root.style.setProperty('--background-highlight', theme_data.background_highlight);
       if(theme_data.font_color != undefined) root.style.setProperty('--font-color', theme_data.font_color);
       if(theme_data.font_color_secondary != undefined) root.style.setProperty('--font-color-secondary', theme_data.font_color_secondary);
