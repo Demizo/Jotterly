@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 81.3 81.3">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+      }
+
+      .cls-2 {
+        clip-path: url(#clippath);
+      }
+
+      .cls-3, .cls-4 {
+        mix-blend-mode: overlay;
+        opacity: .5;
+      }
+
+      .cls-5, .cls-4 {
+        fill: #fff;
+      }
+
+      .cls-6 {
+        fill: #8ec07c;
+      }
+
+      .cls-7 {
+        fill: #383838;
+      }
+
+      .cls-8 {
+        filter: url(#drop-shadow-1);
+      }
+
+      .cls-9 {
+        isolation: isolate;
+      }
+    </style>
+    <clipPath id="clippath">
+      <circle class="cls-1" cx="40.65" cy="40.65" r="40.65" transform="translate(-.79 .81) rotate(-1.13)"/>
+    </clipPath>
+    <filter id="drop-shadow-1" filterUnits="userSpaceOnUse">
+      <feOffset dx=".5" dy=".5"/>
+      <feGaussianBlur result="blur" stdDeviation="0"/>
+      <feFlood flood-color="#000" flood-opacity="1"/>
+      <feComposite in2="blur" operator="in"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g class="cls-9">
+    <g id="Layer_2" data-name="Layer 2">
+      <g id="Logo">
+        <g class="cls-2">
+          <circle class="cls-6" cx="40.54" cy="40.67" r="41.14" transform="translate(-.79 .81) rotate(-1.13)"/>
+          <path class="cls-4" d="M40.54,1.07c18.32,0,34.19,13.26,40.08,29.54C76.13,12.75,59.97-.47,40.72-.47S4.36,13.55,.45,32.2C5.89,15.09,21.63,1.07,40.54,1.07Z"/>
+          <g class="cls-8">
+            <rect class="cls-7" x="23.54" y="23.68" width="22.66" height="11.33" rx="1.85" ry="1.85"/>
+            <rect class="cls-7" x="46.2" y="8.26" width="11.33" height="11.33" rx="1.85" ry="1.85"/>
+            <path class="cls-7" d="M57.53,40.13v16.93c0,8.85-7.18,16.03-16.03,16.03h-1.93c-8.85,0-16.03-7.18-16.03-16.03v-5.6c0-.57,.46-1.03,1.03-1.03h9.26c.57,0,1.03,.46,1.03,1.03v4.63c0,3.13,2.54,5.66,5.66,5.66h0c3.13,0,5.66-2.54,5.66-5.66v-15.96c0-.57,.46-1.03,1.03-1.03h9.26c.57,0,1.03,.46,1.03,1.03Z"/>
+          </g>
+          <g class="cls-3">
+            <path class="cls-5" d="M44.35,23.69H25.4c-1.02,0-1.85,.83-1.85,1.85v1.13c0-1.02,.83-1.85,1.85-1.85h18.95c1.02,0,1.85,.83,1.85,1.85v-1.13c0-1.02-.83-1.85-1.85-1.85Z"/>
+            <path class="cls-5" d="M55.68,8.27h-7.62c-1.02,0-1.85,.83-1.85,1.85v1.13c0-1.02,.83-1.85,1.85-1.85h7.62c1.02,0,1.85,.83,1.85,1.85v-1.13c0-1.02-.83-1.85-1.85-1.85Z"/>
+            <g>
+              <path class="cls-5" d="M56.5,39.11h-9.26c-.57,0-1.03,.46-1.03,1.03v1.13c0-.57,.46-1.03,1.03-1.03h9.26c.57,0,1.03,.46,1.03,1.03v-1.13c0-.57-.46-1.03-1.03-1.03Z"/>
+              <path class="cls-5" d="M34.87,57.23c0,3.13,2.54,5.66,5.66,5.66s5.66-2.54,5.66-5.66v-1.13c0,3.13-2.54,5.66-5.66,5.66s-5.66-2.54-5.66-5.66v1.13Z"/>
+              <path class="cls-5" d="M24.58,51.57h9.26c.57,0,1.03,.46,1.03,1.03v-1.13c0-.57-.46-1.03-1.03-1.03h-9.26c-.57,0-1.03,.46-1.03,1.03v1.13c0-.57,.46-1.03,1.03-1.03Z"/>
+            </g>
+          </g>
+          <path class="cls-3" d="M40.54,80.55c-18.32,0-34.19-13.26-40.08-29.54,4.49,17.86,20.65,31.08,39.9,31.08,19.82,0,36.36-14.02,40.27-32.67-5.43,17.11-21.17,31.13-40.08,31.13Z"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

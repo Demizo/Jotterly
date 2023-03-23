@@ -20,6 +20,7 @@
     
     let selectedTheme = "";
     async function getThemes() {
+      themes = [];
       selectedTheme = JSON.parse(await invoke("get_settings")).theme;
       themes.push("Dark");
       themes.push("Light");
