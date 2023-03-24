@@ -16,7 +16,15 @@ todo
 todo
 
 ## Development
-todo
+Jotterly is built using [Tauri](https://tauri.app/) and [Svelte](https://svelte.dev/).
+- Clone the repo
+- Install Tauri dependencies
+- Run with `npm run tauri dev` or `cargo tauri dev`
+- Build with `cargo tauri build`
+#### Setup database for sqlx
+- Create a .env file in the project root with the following contents `DATABASE_URL=sqlite:./jotterly.db`
+- Create a jotterly.db file in /src-tauri/
+- Run migrations on the database with `sqlx migrate run`
 
 ## License
 
