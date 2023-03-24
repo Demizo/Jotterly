@@ -10,9 +10,25 @@ Traditional note taking apps are meant to store organized **monolithic** notes. 
 Simply **Jot** something down and search for it later!
 
 ## Installation
-todo
+### Windows
+Download the latest **.msi** installer from [releases](https://github.com/Demizo/Jotterly/releases).
+### Linux
+**Jotterly** is available as an **AppImage** and will run anywhere an **AppImage** can. You can use [AppImageLauncher](https://github.com/TheAssassin/AppImageLauncher) to integrate **Jotterly** with your system. Download the latest **AppImage** from [releases](https://github.com/Demizo/Jotterly/releases).
 
 ## Features
+- [x] Create Jots
+- [x] Theming options
+- [ ] Custom theme option
+- [x] Tag Jots
+- [x] Filter by tag
+- [x] Markdown Support
+- [ ] Keyboard Shortcuts
+- [x] Keyboard Navigation
+- [ ] System Tray / Global shortcuts
+- [ ] Color Tags
+- [ ] Image / Screenshot Jot support
+
+## Theming
 todo
 
 ## Development
