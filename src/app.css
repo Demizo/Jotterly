@@ -23,7 +23,10 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 }
-
+::-webkit-scrollbar{
+  height: 0px;
+  width: 0px;
+}
 .container {
   margin: 0;
   /* padding-top: 10vh; */
