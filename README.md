@@ -8,6 +8,11 @@ Traditional note taking apps are meant to store organized **monolithic** notes. 
 **Jotterly** streamlines jotting down facts and ideas without the hassle or clutter of managing **monolithic** notes...
 
 Simply **Jot** something down and search for it later!
+<p align="center">
+<img width="300" src="https://github.com/Demizo/Jotterly/blob/master/web/SearchForJots.png" alt="Jotterly Banner">
+<img width="300" src="https://github.com/Demizo/Jotterly/blob/master/web/WelcomePageLight.png" alt="Jotterly Banner">
+<img width="300" src="https://github.com/Demizo/Jotterly/blob/master/web/EditJots.png" alt="Jotterly Banner">
+</p>
 
 ## Installation
 ### Windows
