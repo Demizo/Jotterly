@@ -2,7 +2,7 @@
     all(not(debug_assertions), target_os = "windows"),
     windows_subsystem = "windows"
 )]
-use tauri::Manager;
+use tauri::{Manager, RunEvent, GlobalShortcutManager, SystemTrayEvent, CustomMenuItem, SystemTrayMenu, SystemTrayMenuItem, SystemTray};
 extern crate tauri_test;
 use tauri_test::{database::{self}};
 use database::bridge::Bridge;
@@ -108,7 +108,16 @@ fn init(app: &mut tauri::App) {
     theme::create_default_themes(app).unwrap();
 }
 fn main() {
-    tauri::Builder::default()
+
+    let quit = CustomMenuItem::new("quit".to_string(), "Quit");
+    let toggle = CustomMenuItem::new("toggle".to_string(), "Toggle Window");
+    let tray_menu = SystemTrayMenu::new()
+        .add_item(toggle)
+        .add_native_item(SystemTrayMenuItem::Separator)
+        .add_item(quit);
+
+    #[allow(unused_mut)]
+    let mut app = tauri::Builder::default()
         .setup(|app| {
         let main_window = app.get_window("main").unwrap();
         
@@ -122,6 +131,83 @@ fn main() {
         .invoke_handler(tauri::generate_handler![search_jots,get_all_tags_for_jot,get_all_tags,get_top_tags,add_tag_to_jot,add_new_tag_to_jot,remove_tag_from_jot,search_tags,update_jot_text,create_jot,delete_jot,get_jot,
             fetch_all_themes,get_theme,
             get_settings,set_setting,open_link,open_themes_folder])
-        .run(tauri::generate_context!())
+        .system_tray(SystemTray::new().with_menu(tray_menu))
+        .on_system_tray_event(|app, event| match event {
+            SystemTrayEvent::LeftClick {
+            position: _,
+            size: _,
+            ..
+            } => {
+                let window = app.get_window("main").unwrap();
+                if window.is_visible().unwrap() {
+                    window.hide().unwrap();
+                } else {
+                    window.show().unwrap();
+                    window.set_focus().unwrap();
+                }
+            }
+            SystemTrayEvent::RightClick {
+            position: _,
+            size: _,
+            ..
+            } => {
+                
+            }
+            SystemTrayEvent::DoubleClick {
+            position: _,
+            size: _,
+            ..
+            } => {
+                
+            }
+            SystemTrayEvent::MenuItemClick { id, .. } => {
+                match id.as_str() {
+                    "quit" => {
+                    std::process::exit(0);
+                    }
+                    "toggle" => {
+                    let window = app.get_window("main").unwrap();
+                    if window.is_visible().unwrap() {
+                        window.hide().unwrap();
+                      } else {
+                        window.show().unwrap();
+                        window.set_focus().unwrap();
+                      }
+                    }
+                    _ => {}
+                }
+            }
+            _ => {}
+        })
+        .on_window_event(|event| match event.event() {
+            tauri::WindowEvent::CloseRequested { api, .. } => {
+              event.window().hide().unwrap();
+              api.prevent_close();
+            }
+            _ => {}
+        })
+        .build(tauri::generate_context!())
         .expect("error while running tauri application");
+    app.run(|app_handle, e| match e {
+        // Application is ready (triggered only once)
+        RunEvent::Ready => {
+        let app_handle = app_handle.clone();
+            let window = app_handle.get_window("main").unwrap();
+            window.hide().unwrap();
+                let app_handle = app_handle.clone();
+                app_handle
+                    .global_shortcut_manager()
+                    .register("CmdOrCtrl+Shift+J", move || {
+                        if window.is_visible().unwrap() {
+                            window.hide().unwrap();
+                        } else {
+                            window.show().unwrap();
+                            window.unminimize().unwrap();
+                            window.set_focus().unwrap();
+                        }
+                    })
+                    .unwrap();
+        }
+        _ => {}
+      });
 }

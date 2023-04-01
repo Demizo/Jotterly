@@ -2,7 +2,10 @@
   import { invoke } from "@tauri-apps/api/tauri";
   import JotView from "$lib/JotView.svelte";
   import SettingsPopup from "$lib/SettingsPopup.svelte";
-  
+  import { register } from '@tauri-apps/api/globalShortcut';
+  import { readText } from '@tauri-apps/api/clipboard';
+  import { appWindow } from '@tauri-apps/api/window';
+
   let showSettings = false;
   function openSettings() {
     showSettings=true;
@@ -26,6 +29,18 @@
   let new_jot_id = Number;
   async function create_jot() {
     new_jot_id = await invoke("create_jot", {text: query, img_path: undefined, tagIds: active_tags.map(t => t.id)});
+    await search_jots();
+  }
+
+  register('CommandOrControl+Alt+Shift+J', () => {
+    create_jot_from_clipboard();
+  });
+  async function create_jot_from_clipboard() {
+    await appWindow.show();
+    await appWindow.unminimize();
+    await appWindow.setFocus();
+    let text = await readText();
+    new_jot_id = await invoke("create_jot", {text: text, img_path: undefined, tagIds: active_tags.map(t => t.id)});
     await search_jots();
   }
   

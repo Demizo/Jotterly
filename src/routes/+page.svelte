@@ -1,7 +1,8 @@
-<script land="ts">
+<script lang="ts">
   import JotBar from "$lib/JotBar.svelte";
   import { invoke } from "@tauri-apps/api/tauri";
-  
+  import { appWindow } from '@tauri-apps/api/window';
+
   const root = document.documentElement;
   async function initUI() {
       let theme = JSON.parse(await invoke("get_settings")).theme;
@@ -16,6 +17,9 @@
       if(theme_data.font_color != undefined) root.style.setProperty('--font-color', theme_data.font_color);
       if(theme_data.font_color_secondary != undefined) root.style.setProperty('--font-color-secondary', theme_data.font_color_secondary);
       if(theme_data.highlight_thickness != undefined) root.style.setProperty('--highlight-thickness', theme_data.highlight_thickness);
+
+      await appWindow.show();
+      await appWindow.setFocus();
   }
 
 </script>

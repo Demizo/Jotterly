@@ -11,6 +11,11 @@
     "version": "1.0.0"
   },
   "tauri": {
+    "systemTray": {
+      "iconPath": "icons/tray-icon.png",
+      "iconAsTemplate": true,
+      "menuOnLeftClick": false
+    },
     "allowlist": {
       "all": false,
       "shell": {
@@ -23,6 +28,17 @@
       },
       "path": {
         "all": true
+      },
+      "globalShortcut": {
+        "all": true
+      },
+      "window": {
+        "all": true
+      },
+      "clipboard": {
+        "all": false,
+        "readText": true,
+        "writeText": false
       }
     },
     "bundle": {
