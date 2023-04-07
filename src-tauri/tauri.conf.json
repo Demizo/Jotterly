@@ -86,8 +86,10 @@
         "height": 600,
         "resizable": true,
         "title": "Jotterly",
-        "width": 800
+        "width": 800,
+        "visible": true
       }
+    
     ]
   }
 }
